@@ -34,6 +34,9 @@ function install_fir_cli() {
     gem install fir-cli
     # check current version of fir-cli
     fir -v
+}
+
+function login_fir() {
     # login fir with token from https://www.betaqr.com/apps
     fir login 246afdd2f1277fa519a467c6c1cbb1d3
     # look over current fir user info
@@ -47,10 +50,12 @@ function publish_ipa() {
 }
 
 if [ `command -v fir` ]; then
+    login_fir
     echo "fir-cli installed, start to publish ipa..."
 else
     echo "fir-cli not installed, start to install fir-cli..."
     install_fir_cli
+    login_fir
 fi
 
 # fir build ipa功能已过期, 请及时迁移打包部分, 推荐使用 fastlane gym 生成ipa 后再使用 fir-cli 上传
