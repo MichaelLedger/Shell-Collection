@@ -3,6 +3,8 @@
 # run shell methods
 # ./fir-upload.sh <ipa-path>
 # sh fir-upload.sh <ipa-path>
+# chmod +x fir-upload.sh <ipa-path>
+# chmod 755 fir-upload.sh <ipa-path>
 
 # if run shell error: permission denied
 # sudo chmod -R 777 fir-upload.sh
