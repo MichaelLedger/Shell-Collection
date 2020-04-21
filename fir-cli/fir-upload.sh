@@ -13,6 +13,10 @@
 # gem uninstall fir-cli
 # rvm reinstall ruby-2.4.0
 
+# install rvm
+# \curl -sSL https://get.rvm.io | bash -s stable
+#To start using RVM you need to run `source /Users/<user>/.rvm/scripts/rvm`
+
 function exit_script() {
     exit 1
 }
