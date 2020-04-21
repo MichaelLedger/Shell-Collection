@@ -3,10 +3,10 @@
 # run shell methods
 # ./fir-upload.sh <ipa-path>
 # sh fir-upload.sh <ipa-path>
-# chmod +x fir-upload.sh <ipa-path>
-# chmod 755 fir-upload.sh <ipa-path>
 
 # if run shell error: permission denied
+# chmod +x fir-upload.sh
+# chmod 755 fir-upload.sh
 # sudo chmod -R 777 fir-upload.sh
 
 # if you fetch SyntaxError while run fir-cli commands
