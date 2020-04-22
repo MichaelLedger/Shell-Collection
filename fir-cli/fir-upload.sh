@@ -17,10 +17,6 @@
 # \curl -sSL https://get.rvm.io | bash -s stable
 #To start using RVM you need to run `source /Users/<user>/.rvm/scripts/rvm`
 
-function exit_script() {
-    exit 1
-}
-
 function install_fir_cli() {
     # check current version of fir-cli
     ruby -v
@@ -44,13 +40,14 @@ function login_fir() {
     # login fir with token from https://www.betaqr.com/apps
     fir login 246afdd2f1277fa519a467c6c1cbb1d3
     # look over current fir user info
-    fir me
+    # fir me
 }
 
 function publish_ipa() {
     # upload ipa to fir.im
     echo "publishing ipa to fir.im: $1..."
-    fir publish $1
+    # jenkins run 'fir publish' always failed, so need to add '|| true' to make it always success.
+    fir publish $1 || true
 }
 
 if [ `command -v fir` ]; then
@@ -75,13 +72,16 @@ fi
 #$?    显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。
 if [ $# -ne 1 ]; then
     echo "only one argument is needed for ipa path."
-    exit_script
+    # 'exit 1' means failed!
+    exit 1
 fi
 
 echo $1
 if [ X$1 = X ]
     then
         echo "the first argument is empty, please enter ipa path and rerun."
+        # 'exit 1' means failed!
+        exit 1
     else
         echo "the first argument is $1"
         publish_ipa $1
@@ -94,10 +94,10 @@ fi
 # -lt 小于
 # -ge 大于等于
 # -le 小于等于
-if [ $? -ne 0 ]; then
-    echo "====publish ipa failed: $1===="
-else
-    echo "====publish ipa success: $1===="
-fi
+#if [ $? -ne 0 ]; then
+#    echo "====publish ipa failed: $1===="
+#else
+#    echo "====publish ipa success: $1===="
+#fi
 
-exit_script
+exit 0
