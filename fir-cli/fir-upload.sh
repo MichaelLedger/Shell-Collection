@@ -1,4 +1,23 @@
-#!/bin/bash
+#!/bin/bash -ilex
+
+# jenkins打包报错：command not found
+# 需要在Execute shell 里将#!/bin/bash 改成 #!/bin/bash -ilex
+
+# jenkins没有加载/etc/profile导致，需要在jenkins调用shell脚本的最前面加一行脚本，
+# #!/bin/bash -ilex，可以通过-i参数和-l参数让bash为login shell and interactive shell，就可以读取/etc/profile和~/.bash_profile等文件
+
+# 实际挨个试了下#!/bin/bash -ilex中的各个参数 发现有用的是-l
+# 对于e参数表示一旦出错,就退出当前的shell，x参数表示可以显示所执行的每一条命令。
+
+# /bin/sh 相当于 /bin/bash --posix
+# sh跟bash的区别，实际上就是bash有没有开启posix模式的区别
+#（遵循posix的特定规范，有可能就包括这样的规范：“当某行代码出错时，不继续往下解释”）
+
+# #!是特殊的表示符，后面跟的是脚本解释器的路径，常见的脚本解释器有:/bin/csh、/bin/sed、/bin/awk等。
+# 在Ubuntu中/bin/sh就是/bin/dash
+# 原因在于在GNU/Linux操作系统中，/bin/sh本来是bash（Bourne-Again Shell）的符号链接
+# 但bash移植到Linux后更名为dash(Debian Almquist Shell) ，并将/bin/sh指向它
+# 因此可认为在Ubuntu中/bin/sh就是/bin/dash。
 
 # run shell methods
 # ./fir-upload.sh <ipa-path>
