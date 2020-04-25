@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ $# -ne 6 ]; then
+    echo "six argument is needed, like this: $ sh git_lines.sh 2018 6 1 2018 6 30"
+    # 'exit 1' means failed!
+    exit 1
+fi
+
 csv=./$1年$2月$3日至$4年$5月$6日开发行数统计_temp.csv
 
 csv2=./$1年$2月$3日至$4年$5月$6日开发行数统计.csv
@@ -13,12 +19,6 @@ rm -rf $csv $csv2
 # 防止csv乱码
 
 # printf "\xEF\xBB\xBF" > $csv
-
-if [ $# -ne 6 ]; then
-    echo "six argument is needed, like this: $ sh git_lines.sh 2018 6 1 2018 6 30"
-    # 'exit 1' means failed!
-    exit 1
-fi
 
 echo "$1年$2月$3日至$4年$5月$6日的开发行数,,," >> $csv
 
