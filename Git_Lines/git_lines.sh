@@ -14,20 +14,26 @@ rm -rf $csv $csv2
 
 # printf "\xEF\xBB\xBF" > $csv
 
+if [ $# -ne 6 ]; then
+    echo "six argument is needed, like this: $ sh git_lines.sh 2018 6 1 2018 6 30"
+    # 'exit 1' means failed!
+    exit 1
+fi
+
 echo "$1年$2月$3日至$4年$5月$6日的开发行数,,," >> $csv
 
 echo "开发人员,增加行数,删除行数,合计" >> $csv
 
 # 第一项($1)为增加的代码行数 第二项($2)为删除的代码行数 ($3)第三项为代码所在路径
 
-# git log --author=dashan.xiang --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "项大山,"add,",",del,",",total}' >> $csv
-git log --author=Mountain\ Xiang --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "项大山,"add,",",del,",",total}' >> $csv
+# git log --author=dashan.xiang --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "X大山,"add,",",del,",",total}' >> $csv
+git log --author=Mountain\ Xiang --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "X大山,"add,",",del,",",total}' >> $csv
 
-git log --author=kfkf1127 --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "孔峰,"add,",",del,",",total}' >> $csv
+git log --author=kfkf1127 --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "X峰,"add,",",del,",",total}' >> $csv
 
-git log --author=weilong --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "高伟龙,"add,",",del,",",total}' >> $csv
+git log --author=weilong --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "X伟龙,"add,",",del,",",total}' >> $csv
 
-git log --author=x\ d --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "胡礼节,"add,",",del,",",total}' >> $csv
+git log --author=x\ d --pretty=tformat: --numstat --since=$1-$2-$3 --until=$4-$5-$6 | awk '{add+=$1;del+=$2;total+=$1+$2}END{print "X礼节,"add,",",del,",",total}' >> $csv
 
 # iconv文件字符转码为GB18030以支持Excel,避免中文乱码
 
