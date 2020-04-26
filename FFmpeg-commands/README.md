@@ -397,6 +397,9 @@ ffmpeg -i input.flv -f image2 -vf fps=fps=1/20 out%d.png
 ffmpeg -i jidu.mp4 -frames 3 -vf "select=not(mod(n,1000)),scale=320:240,tile=2x3" out.png
 
 ## 参考资料
-![MAC 系统安装FFmpeg](https://www.jianshu.com/p/73441acf7815)
-![ffmpeg 常用命令总结](https://blog.csdn.net/weixin_42081389/article/details/100543007)
-![ffmpeg 基本用法](https://www.jianshu.com/p/3c8c4a892f3c)
+
+[MAC 系统安装FFmpeg](https://www.jianshu.com/p/73441acf7815)
+
+[ffmpeg 常用命令总结](https://blog.csdn.net/weixin_42081389/article/details/100543007)
+
+[ffmpeg 基本用法](https://www.jianshu.com/p/3c8c4a892f3c)
