@@ -5,36 +5,39 @@ ffmpeg 常用命令总结，譬如：AVI转MP4、MP4转TS、视频压缩、去�
 
 ## 终端命令
 
+### 安装ffmpeg
+`% brew install ffmpeg`
+
 ### 视频格式转换
 #### AVI转MP4
-`ffmpeg -i xxx.avi xxx.mp4`
+`% ffmpeg -i xxx.avi xxx.mp4`
 或者
 `% sh translate.sh big_buck_bunny.avi output.mp4`
 #### TS转MP4
-`ffmpeg -i xxx.ts xxx.mp4`
+`% ffmpeg -i xxx.ts xxx.mp4`
 或者
 `% sh translate.sh big_buck_bunny.ts output.mp4`
 #### MP4转AVI
-`ffmpeg -i xxx.mp4 xxx.avi`
+`% ffmpeg -i xxx.mp4 xxx.avi`
 或者
 `% sh translate.sh big_buck_bunny.mp4 output.avi`
 #### MP4转TS
-`ffmpeg -i xxx.mp4 xxx.ts`
+`% ffmpeg -i xxx.mp4 xxx.ts`
 或者
 `% sh translate.sh big_buck_bunny.mp4 output.ts`
 
 ### 视频压缩
 #### 压缩帧率
-`ffmpeg –i input.mp4 –r <fps> output.mp4`
+`% ffmpeg –i input.mp4 –r <fps> output.mp4`
 #### 压缩码率
 音频：-b:a 视频： - b:v
-`ffmpeg -i input.avi -b:v 1500k output.mp4`
+`% ffmpeg -i input.avi -b:v 1500k output.mp4`
 #### 压缩文件大小(播放时长)
 -fs (file size首字母缩写)
-`ffmpeg -i input.avi -fs 1024K output.mp4`
+`% ffmpeg -i input.avi -fs 1024K output.mp4`
 **(视频码率+音频码率) * 时长 /8 = 输出文件大小K**
 #### 压缩分辨率
-`ffmpeg -i input_file -s 320x240 output_file`
+`% ffmpeg -i input_file -s 320x240 output_file`
 
 ## FFmpeg 
 ### 主要组成部分
