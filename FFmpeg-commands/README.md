@@ -31,10 +31,13 @@ ffmpeg 常用命令总结，譬如：AVI转MP4、MP4转TS、视频压缩、去�
 `% ffmpeg –i input.mp4 –r <fps> output.mp4`
 #### 压缩码率
 音频：-b:a 视频： - b:v
+
 `% ffmpeg -i input.avi -b:v 1500k output.mp4`
 #### 压缩文件大小(播放时长)
 -fs (file size首字母缩写)
+
 `% ffmpeg -i input.avi -fs 1024K output.mp4`
+
 **(视频码率+音频码率) * 时长 /8 = 输出文件大小K**
 #### 压缩分辨率
 `% ffmpeg -i input_file -s 320x240 output_file`
