@@ -3,6 +3,13 @@
 ## 使用场景
 ffmpeg 常用命令总结，譬如：AVI转MP4、MP4转TS、视频压缩、去除视频声音、合并音频和视频等等
 
+### 各种视频格式的测试文件
+mplayer官方提供的各种视频格式的测试文件
+`http://samples.mplayerhq.hu/`
+
+### 常见的12种视频格式:
+`avi、3gp、flv、mkv、mov、mp4、mpg、rmvb、swf、vob、wmv、dat`
+
 ## 终端命令
 
 ### 安装ffmpeg
@@ -26,6 +33,16 @@ ffmpeg 常用命令总结，譬如：AVI转MP4、MP4转TS、视频压缩、去�
 或者
 `% sh translate.sh big_buck_bunny.mp4 output.ts`
 
+#### 特别提醒
+**rmvb有专利的，开源的编码器似乎不能转成rmvb，只能用REAL公司自己的编码器。
+由于 RMVB 是最新的编码方式，所以现在只有使用 Real 公司的 Helix Producer 9，才可以制作 RMVB格式的视频文件。
+Helix Producer 9 分为 Basic 版和 Plus 版，Plus 版的功能比 Basic 版要更为强大，但是 Basic 版是免费的。**
+
+```
+[NULL @ 0x7f8d5181a200] Unable to find a suitable output format for 'big_buck_bunny.rmvb'
+big_buck_bunny.rmvb: Invalid argument
+```
+
 ### 视频压缩
 #### 压缩帧率
 `% ffmpeg –i input.mp4 –r <fps> output.mp4`
@@ -41,6 +58,88 @@ ffmpeg 常用命令总结，譬如：AVI转MP4、MP4转TS、视频压缩、去�
 **(视频码率+音频码率) * 时长 /8 = 输出文件大小K**
 #### 压缩分辨率
 `% ffmpeg -i input_file -s 320x240 output_file`
+
+### ffmpeg支持的封装格式
+首先，可以使用 `$ ffmpeg -formats` 命令，查看ffmpeg支持的封装格式。
+(D、E分别表示解复用和复用）
+
+### 命令通常格式
+
+ffmpeg -i xxx out_file　　
+
+### 常用的转换格式命令
+
+1. mpeg audio转pcm原始数据
+
+ffmpeg -i cctv2_4101.mpa -f s16le -ar 48000 -acodec pcm_s16le cctv2-4101-Normal.pcm
+
+2. jpg转yuv
+
+jpeg -> yuv420
+ffmpeg.exe -i input_file.jpg -pix_fmt yuv420p -y output_file.yuv -v 0
+
+yuv -> jpeg
+将大小为720x576的input_file.yuv原始数据另存为jpg格式
+ffmpeg.exe -y -s 720x576 -i input_file.yuv -vcodec mjpeg output_file.jpg
+
+3. 不同封装格式转换
+
+3gp to avi
+
+ffmpeg -i source.3gp -f avi -vcodec xvid -acodec mp3 -ar
+
+22050 destination.avi
+
+flv to 3gp
+ffmpeg -i source.flv -s 176×144 -vcodec h263 -r 25 -b 200
+-ab 64 -acodec mp3 -ac 1 -ar 8000 destination.3gp
+
+flv to mp4
+ffmpeg -i source.flv -vcodec h264 -r 25 -b 200 -ab 128
+-acodec mp3 -ac 2 -ar 44100 destination.mp3
+
+avi to mp4
+ffmpeg -i source.avi -f psp -r 29.97 -b 768k -ar 24000 -ab
+64k -s 320×240 destination.mp4
+
+mp4 to 3gp
+ffmpeg -i source.mp4 -s 176×144 -vcodec h263 -r 25 -b 12200
+-ab 12200 -ac 1 -ar 8000 destination.3gp
+
+avi to 3gp
+ffmpeg -i source.avi-s qcif -vcodec h263 -acodec mp3 -ac 1
+-ar 8000 -r 25 -ab 32 -y destination.3gp
+
+mpg to 3gp
+ffmpeg -i source.mpg -s qcif -vcodec h263 -acodec mp3 -ac 1
+-ar 8000 -ab 32 -y destination.3gp
+
+4. yuv转h264 raw/TS
+
+ffmpeg.exe -s 352x288 -pix_fmt yuv420p -i test_352x288.yuv -vcodec libx264 out.h264
+
+（若输出文件改为out.ts，即可实现yuv转ts）
+
+以下简单总结下ffmpeg命令参数：
+
+-i 指定要转换视频的源文件
+-s 视频转换后视频的分辨率
+-vcodec 视频转换时使用的编解码器（-codecs）
+-r 视频转换换的桢率(默认25桢每秒)
+-b 视频转换换的bit率
+-ab 音频转换后的bit率(默认64k)
+-acodec 制度音频使用的编码器（-codecs）
+-ac 制定转换后音频的声道
+
+-ar 音频转换后的采样率
+
+-an 禁用音频
+
+-vn 禁用视频
+
+-acodec copy 复制音频，不转码
+
+-vcodec copy 复制视频，不转码
 
 ## FFmpeg 
 ### 主要组成部分
@@ -406,3 +505,5 @@ ffmpeg -i jidu.mp4 -frames 3 -vf "select=not(mod(n,1000)),scale=320:240,tile=2x3
 [ffmpeg 常用命令总结](https://blog.csdn.net/weixin_42081389/article/details/100543007)
 
 [ffmpeg 基本用法](https://www.jianshu.com/p/3c8c4a892f3c)
+
+[ffmpeg转码参数设置](https://www.cnblogs.com/tocy/p/ffmpeg_transcode_formats.html)
