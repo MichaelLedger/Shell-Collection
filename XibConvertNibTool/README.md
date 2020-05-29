@@ -11,6 +11,8 @@ SDK（静态库 or 动态库）中建议使用 `bundle` 统一存放 `xib` 文�
 ### 使用方法
 
 #### 单个转换
+ **将 `xib` 文件拷贝到 `convert.sh` 同级目录下**
+ 
 终端执行如下命令：
 ```
 $ sh convert.sh xxx.xib
