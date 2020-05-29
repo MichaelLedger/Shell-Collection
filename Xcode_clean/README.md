@@ -10,6 +10,12 @@
 这个根据个人手动筛选删除，建议每个大版本保留一个即可（**方便使用模拟器测试版本兼容问题**）
 需要的小版本可以后续使用的时候下载
 
+删除 `runtime` 并不会影响该版本的模拟器正常运行~
+
+模拟器设备目录：
+ `~/Library/Developer/CoreSimulator/Devices`
+ 这个根据个人手动筛选删除，也可以通过Xcode->Add Additional Simulators...->Simulators选择模拟器进行删除
+
 ## 温馨提示
 资源库 `/Users/user/Library` 下文件夹占用系统内存的绝大部分，多大情况可以达到100G以上！
 建议手动进行删除无用的或者已卸载App的缓存文件，**切记不可全选删除**！
