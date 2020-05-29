@@ -15,6 +15,14 @@
 模拟器设备目录：
  `~/Library/Developer/CoreSimulator/Devices`
  这个根据个人手动筛选删除，也可以通过Xcode->Add Additional Simulators...->Simulators选择模拟器进行删除
+ 
+ 删除模拟器后运行该模拟器会报错，需要清除支持模拟器缓存~
+ ```
+ Unable to boot device because it cannot be located on disk.
+ 
+ The device's data is no longer present at /Users/mxr/Library/Developer/CoreSimulator/Devices/6C43CAD1-218E-4630-8A88-B24AE45C0BCC/data.
+ Use the device manager in Xcode or the simctl command line tool to either delete the device properly or erase contents and settings.
+ ```
 
 ## 温馨提示
 资源库 `/Users/user/Library` 下文件夹占用系统内存的绝大部分，多大情况可以达到100G以上！
