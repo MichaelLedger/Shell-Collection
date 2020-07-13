@@ -2,8 +2,11 @@
 
 ## 背景介绍
 生成文档有三种方式： 
-[docxygen](http://www.stack.nl/~dimitri/doxygen/index.html)
+
+[docxygen](https://www.doxygen.nl/index.html)
+
 [headerdoc](http://developer.apple.com/opensource/tools/headerdoc.html)
+
 [appledoc](http://gentlebytes.com/appledoc/)
 
 ### docxygen
@@ -53,6 +56,7 @@ or
 
 ### Docset
 如果没有设置 `--no-create-docset`，默认会生成Docset并存放到目录，这样Xcode也可以读取帮助文件：
+
 `~/Library/Developer/Shared/Documentation/DocSets`
 
 ### 注释格式
@@ -119,7 +123,7 @@ or
 //  AppDelegate.h
 //  TEST
 //
-//  Created by Gavin Xing on 2020/6/30.
+//  Created by Gavin Xiang on 2020/6/30.
 //  Copyright © 2020 Gavin Xiang. All rights reserved.
 //
 
