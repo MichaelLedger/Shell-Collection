@@ -56,7 +56,7 @@ or
 ```
 
 ### Docset
-如果没有设置 `--no-create-docset`，默认会生成Docset并存放到目录，这样Xcode也可以读取帮助文件：
+如果没有设置 `--no-create-docset`，默认会生成 `<company-id>.<project-name>.docset` 并存放到目录，这样Xcode也可以读取帮助文件：
 
 `~/Library/Developer/Shared/Documentation/DocSets`
 
