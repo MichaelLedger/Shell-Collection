@@ -44,7 +44,8 @@ appledoc源码在github上，而doxygen在svn上。我个人比较偏激地认�
 `% appledoc —version`
 
 ### 使用
-将脚本拷贝到项目的根目录下，运行脚本即可，有两个脚本，根据个人喜好选择使用即可：
+将脚本拷贝到项目的根目录下，运行脚本即可，有两个脚本，根据个人喜好选择使用即可。
+
 其中 `appledoc.sh` 需要手动修改内部参数，而 `appledoc-generator.sh` 可以传参
 ```
 % ./appledoc.sh
