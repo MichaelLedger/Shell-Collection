@@ -33,6 +33,31 @@ mplayer官方提供的各种视频格式的测试文件
 或者
 `% sh translate.sh big_buck_bunny.mp4 output.ts`
 
+### 错误分析
+`$ brew install python3`
+安装python3后导致openssl升级到1.1，但mysqldump还是依赖的1.0.0，从而导致mysqldump时提示
+`dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib`
+
+解决办法：
+使用 `$ brew switch openssl 1.0.2s`
+
+```
+% sh translate.sh Hotarubi.mkv output.mp4
+ffmpeg installed
+dyld: Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+  Referenced from: /usr/local/bin/ffmpeg
+  Reason: image not found
+
+% brew switch openssl 1.1.0 
+Error: openssl does not have a version "1.1.0" in the Cellar.
+openssl's installed versions: 1.0.2r, 1.0.2s
+
+% brew switch openssl 1.0.2s
+Cleaning /usr/local/Cellar/openssl/1.0.2s
+Cleaning /usr/local/Cellar/openssl/1.0.2r
+Opt link created for /usr/local/Cellar/openssl/1.0.2s
+```
+
 #### 特别提醒
 **rmvb有专利的，开源的编码器似乎不能转成rmvb，只能用REAL公司自己的编码器。
 由于 RMVB 是最新的编码方式，所以现在只有使用 Real 公司的 Helix Producer 9，才可以制作 RMVB格式的视频文件。
