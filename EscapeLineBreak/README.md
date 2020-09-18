@@ -4,10 +4,11 @@ Escape txt linebreak to '\n',only for personal useage.
 
 edit your original txt in **words.txt**
 
-% sh escapeLineBreak.sh
+`% sh shell.sh`
 
 then you will get escaped txt in **escaped.txt**.
 
+**the text content in 'escaped.txt' will auto copied to your clipboard!**
 
 ### shell命令：echo命令详解
 
