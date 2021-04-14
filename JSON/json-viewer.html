@@ -193,7 +193,7 @@
                     .replace(/>/g, '&gt;')
                     .replace(/'/g, '&apos;')
                     .replace(/"/g, '&quot;');
- 
+
                 if (options.withLinks && isUrl(json)) {
                     html += '<a href="' + json + '" class="json-string" target="_blank">' + json + '</a>';
                 } else {
@@ -257,6 +257,87 @@
             }
             return html;
         }
+
+        /**
+         * Transform a json object into re-indent format json string
+         * @return string
+         */
+         function json2ReIndent(json, options, indentNum) {
+            var html ='';
+            if (typeof json === 'string') {
+                // Escape tags and quotes
+                json = json
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/'/g, '&apos;')
+                    .replace(/"/g, '&quot;');
+
+                if (options.withLinks && isUrl(json)) {
+                    html += '"' + json + '"';
+                } else {
+                    // Escape double quotes in the rendered non-URL string.
+                    json = json.replace(/&quot;/g, '\\&quot;');
+                    html += '"' + json + '"';
+                }
+            } else if (typeof json === 'number') {
+                html += json;
+            } else if (typeof json === 'boolean') {
+                html += json;
+            } else if (json === null) {
+                html += 'null';
+            } else if (json instanceof Array) {
+                if (json.length > 0) {
+                    html += '[' + '\n';
+                    for (var i = 0; i < json.length; ++i) {
+                        html = appendRepeatedIndent(html, indentNum);
+                        html += json2ReIndent(json[i], options, indentNum+1);
+                        // Add comma if item is not last
+                        if (i < json.length - 1) {
+                            html += ',' + '\n';
+                        }
+                    }
+                    html += '\n';
+                    html = appendRepeatedIndent(html, indentNum-1);
+                    html += ']';
+                } else {
+                    html += '[]';
+                }
+            } else if (typeof json === 'object') {
+                var keyCount = Object.keys(json).length;
+                if (keyCount > 0) {
+                    html += '{' + '\n';
+                    for (var key in json) {
+                        if (Object.prototype.hasOwnProperty.call(json, key)) {
+                            var keyRepr = options.withQuotes ?
+                                '<span class="json-string">"' + key + '"</span>' : key;
+                            // Add toggle button if item is collapsable
+                            html = appendRepeatedIndent(html, indentNum);
+                            html += '"' + keyRepr + '"';
+                            html += ': ' + json2ReIndent(json[key], options, indentNum+1);
+                            // Add comma if item is not last
+                            if (--keyCount > 0) {
+                                html += ',' + '\n';
+                            }
+                        }
+                    }
+                    html += '\n';
+                    html = appendRepeatedIndent(html, indentNum-1);
+                    html +=  '}';
+                } else {
+                    html += '{}';
+                }
+            }
+            return html;
+        }
+
+        function appendRepeatedIndent(str, repeatCount) {
+            for (let i = 0; i < repeatCount; i++) {
+                // str += '\t';
+                str += '  ';
+            }
+            return str;
+        }
  
         /**
          * jQuery plugin method
@@ -280,7 +361,7 @@
                 if (options.rootCollapsable && isCollapsable(json)) {
                     html = '<a href class="json-toggle"></a>' + html;
                 }
- 
+
                 // Insert HTML in target DOM element
                 $(this).html(html);
                 $(this).addClass('json-document');
@@ -310,6 +391,10 @@
                     // Trigger click to collapse all nodes
                     $(this).find('a.json-toggle').click();
                 }
+
+                // Custom: Re-Indent json string from input text area and reset text
+                var reIndentJson = json2ReIndent(json, options, 1);
+                document.getElementById("json-input").value = reIndentJson;
             });
         };
     })(jQuery);
