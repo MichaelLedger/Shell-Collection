@@ -15,6 +15,8 @@
 模拟器设备目录：
  `~/Library/Developer/CoreSimulator/Devices`
  这个根据个人手动筛选删除，也可以通过Xcode->Add Additional Simulators...->Simulators选择模拟器进行删除
+ 此目录占用的内存不大。
+ 建议配合同级目录下的另一个脚本 `Xcode-Simulator-Mapping` 获取模拟器的 runtime 和 device 的 mapping 表，便于精准删除不必要的模拟器。
  
  删除模拟器后运行该模拟器会报错，需要清除支持模拟器缓存~
  ```
