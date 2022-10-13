@@ -267,6 +267,10 @@
             var html ='';
             if (typeof json === 'string') {
                 // Escape tags and quotes
+                /**
+                 * THTML的&lt; &gt; &amp; &quot; &copy; 分别是 <，>，&，"，© 的转义字符
+                 * XML只有5个转义符: &lt; &gt;&amp; &quot; &apos;
+                 */
                 json = json
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
@@ -330,6 +334,13 @@
                     html += '{}';
                 }
             }
+            //restore tags and quotes
+            html = html
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&apos;/g, '\'')
+                    .replace(/&quot;/g, '"');
             return html;
         }
 
@@ -396,7 +407,7 @@
 
                 // Custom: Re-Indent json string from input text area and reset text
                 var reIndentJson = json2ReIndent(json, options, 1);
-                reIndentJson = reIndentJson.replace(/<br\>/g, "\u005c\u006e");
+                reIndentJson = reIndentJson.replace(/<br\>/g, "\u005c\u006e");//unicode 转中文 -> \n 即换行符
                 document.getElementById("json-input").value = reIndentJson;
             });
         };
