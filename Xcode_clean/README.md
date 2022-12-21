@@ -1,4 +1,4 @@
-# Xcode_clean
+# clean.sh
 
 ## 使用场景
 使用脚本快速清理 Xcode
@@ -35,3 +35,29 @@ Xcode12以上可能存在一个问题，长期运行会一直占用越来越多�
 
 ## 特别提醒
 请勿在终端输入 `rm -rf ~` 会删除当前用户根目录下面的全部文件 ! ! !
+
+# xclean.sh
+
+## zsh script to clear xcode caches and project
+
+## Works from Xcode 9.3 to Xcode 11.6
+
+The script is pretty self explanatory. I made it to work with zsh (shell), if you want to use safely with other shell, you need to change the firstline of the script. But if you have zsh installed it should run just fine.
+
+After that, just **make sure that you are indeed inside a folder which contains a workspace or a xcodeproject (or both)** and run the command
+
+## Tips
+
+Move this script to /usr/bin/local so this will be the default usage:
+```
+cd myXcodeWorkspace/
+xclean
+```
+
+forked from [resetXcode.sh](https://gist.github.com/arthurdapaz/e2a4fc83fa561ec52af83a5b08d0497d)
+
+refer from 
+
+[Reset Xcode. Clean, clear module cache, Derived Data and Xcode Caches. You can thank me later.](https://gist.github.com/maciekish/66b6deaa7bc979d0a16c50784e16d697)
+
+[Xcode: "is out of date and needs to be rebuilt"](https://discussions.apple.com/thread/254240507)
