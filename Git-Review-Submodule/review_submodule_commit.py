@@ -104,10 +104,12 @@ for key, value in submodule_remote_urls_mapping.items():
     if local_commit_id != remote_head_commit_id:
         print([relative_path], 'submodule audit failed! 😢')
         os.chdir(main_project_path)
+        print(os.getcwd())
         sys.exit(1)
     else:
         print([relative_path], 'submodule audit passed! 😊')
 
 print('[🎉] All submodules audit passed! 🍺')
 os.chdir(main_project_path)
+print(os.getcwd())
 sys.exit(0)
