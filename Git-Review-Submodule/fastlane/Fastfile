@@ -1,0 +1,9 @@
+default_platform(:ios)
+
+platform :ios do
+    desc "Review submodules commit-id"
+    lane :review_submodules do |options|
+	# UI.message "hello world"
+ 	review_submodules_commit(options)	
+    end
+end

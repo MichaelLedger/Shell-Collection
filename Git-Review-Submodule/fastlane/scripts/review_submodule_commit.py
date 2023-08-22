@@ -15,15 +15,13 @@ import json
 print(os.environ)
 print(os.getcwd())
 
-#main_project_path = '/Users/gavinxiang/Downloads/freeprints_ios_5'
-main_project_path = os.getcwd()
-print('main_project_path:', main_project_path)
+#record original path, restore cd to this path before exit.
+entrance_path = os.getcwd()
 
-#submodule_branch_mapping_str = '{"Calendar/MyDealsSDK":"MDGC_1.1.0"}'
-submodule_branch_mapping_str = os.environ['SUBMODULE_BRANCH_MAPPING']
-submodule_branch_mapping = json.loads(submodule_branch_mapping_str)
-print('submodule_branch_mapping:', submodule_branch_mapping)
-
+#Show the absolute path of the top-level directory.
+def get_git_top_level_path() -> str:
+    return subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('ascii').strip()
+    
 def get_git_submodules_path() -> str:
     return subprocess.check_output(['git', 'config', '--file', '.gitmodules', '--get-regexp', 'path']).decode('ascii').strip()
 
@@ -33,9 +31,17 @@ def get_git_revision_hash() -> str:
 def get_git_revision_short_hash() -> str:
     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
 
+#main_project_path = '/Users/gavinxiang/Downloads/freeprints_ios_5'
+#main_project_path = os.getcwd()
+main_project_path = get_git_top_level_path()
+print('main_project_path:', main_project_path)
 os.chdir(main_project_path)
-
 print(os.getcwd())
+
+#submodule_branch_mapping_str = '{"Calendar/MyDealsSDK":"MDGC_1.1.0"}'
+submodule_branch_mapping_str = os.environ['SUBMODULE_BRANCH_MAPPING']
+submodule_branch_mapping = json.loads(submodule_branch_mapping_str)
+print('submodule_branch_mapping:', submodule_branch_mapping)
 
 def get_git_submodules_commit() -> dict:
     submodule_commit_mapping={}
@@ -103,13 +109,13 @@ for key, value in submodule_remote_urls_mapping.items():
     print('local_commit_id:', local_commit_id)
     if local_commit_id != remote_head_commit_id:
         print([relative_path], 'submodule audit failed! 😢')
-        os.chdir(main_project_path)
+        os.chdir(entrance_path)
         print(os.getcwd())
         sys.exit(1)
     else:
         print([relative_path], 'submodule audit passed! 😊')
 
 print('[🎉] All submodules audit passed! 🍺')
-os.chdir(main_project_path)
+os.chdir(entrance_path)
 print(os.getcwd())
 sys.exit(0)
