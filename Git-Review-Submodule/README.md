@@ -14,26 +14,36 @@ Just inject environment variables via Jenkins plugin [Environment Injector] like
 
 ### By Terminal
 1. cd to your main project git root path
+
 2. custom `submodule_branch_mapping_str` in `review_submodule_commit.py`
-2. run python script
+
+3. run python script
+
 `% python3 review_submodule_commit.py`
 
 ### By Jenkins & fastlane
-1. cd to your fastlane root path
 
-2. inject environment variables `SUBMODULE_BRANCH_MAPPING` via Jenkins plugin if you use fastlane & Jenkins
+1. inject environment variables `SUBMODULE_BRANCH_MAPPING` via Jenkins plugin if you use fastlane & Jenkins
 
 Build Environment -> Inject environment variables to the build process -> Properties Content
 
 `SUBMODULE_BRANCH_MAPPING={"Calendar/MyDealsSDK":"MDGC_1.1.0"}`
 
-3. custom fastlane action `review_submodules_commit`
+2. cd to your fastlane root path which must contains `Fastfile`
+
+3. **copy `actions` directory to the path of 'Fastfile'**
+
+you can either following below commands to genetate your custom actions:
+
+custom fastlane action `review_submodules_commit`
 
 `% fastlane new_action`
 
-recheck action: `% bundle exec fastlane action review_submodules_commit`
+custom file in `actions/review_submodules_commit.rb`
 
-4. replace file in `actions/review_submodules_commit.rb`
+recheck custom action: `% bundle exec fastlane action review_submodules_commit`
+
+4. **copy `scripts` directory to the path of `actions`** to contains `review_submodule_commit.py`
 
 5. define lane in `Fastfile`
 
@@ -44,9 +54,12 @@ lane :review_submodules do |options|
     review_submodules_commit(options)    
 end
 ```
-5. Build Steps -> Execute Shell -> Command
+6. Jenkins Dashboard -> Your Jenkins Item -> Configure -> Build Steps -> Execute Shell -> Command
 
 **remember always cd to fastlane root path before running below command**
+
+`cd <fastlane root path>`
+
 `fastlane review_submodules`
 
 ## Example
