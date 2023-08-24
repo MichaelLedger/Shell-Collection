@@ -46,6 +46,7 @@ end
 ```
 5. Build Steps -> Execute Shell -> Command
 
+**remember always cd to fastlane root path before running below command**
 `fastlane review_submodules`
 
 ## Example
