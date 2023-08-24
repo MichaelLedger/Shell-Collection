@@ -50,8 +50,7 @@ recheck custom action: `% bundle exec fastlane action review_submodules_commit`
 ```
 desc "Review submodules commit-id"
 lane :review_submodules do |options|
-    # UI.message "hello world"
-    review_submodules_commit(options)    
+    review_submodules_commit(options)
 end
 ```
 6. Jenkins Dashboard -> Your Jenkins Item -> Configure -> Build Steps -> Execute Shell -> Command
