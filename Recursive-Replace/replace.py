@@ -1,5 +1,5 @@
 import glob
-root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Replace-String/Test'
+root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test'
 for filepath in glob.iglob(root_path + '/**/*.txt', recursive=True):
     print(filepath)
     with open(filepath) as file:

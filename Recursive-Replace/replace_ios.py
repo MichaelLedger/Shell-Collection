@@ -16,7 +16,7 @@ from pathlib import Path
 #mask = multi_extension_glob_mask('/**/*.', 'h', 'm', 'mm', 'xib', 'storyboard', 'swift')
 #print(mask)  # /**/*.[sxmh]*
 
-root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Replace-String/Test'
+root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test'
 
 #types = ('*.h', '*.m','*.mm', '*.xib', '*.storyboard', '*.swift') # the tuple of file types
 #for type in types:
