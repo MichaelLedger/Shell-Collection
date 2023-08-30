@@ -104,3 +104,13 @@ will replace ` A.m ` with ` B.m `
 [How to loop with indexes in Python](https://treyhunner.com/2016/04/how-to-loop-with-indexes-in-python/)
 
 [User input and command line arguments](https://stackoverflow.com/questions/70797/user-input-and-command-line-arguments)
+
+[How to Rename File in Python? (with OS module)](https://favtutor.com/blogs/rename-file-python)
+
+[How to rename a file using Python](https://stackoverflow.com/questions/2491222/how-to-rename-a-file-using-python)
+
+[How to Check if a File Exists in Python with isFile() and exists()](https://www.freecodecamp.org/news/how-to-check-if-a-file-exists-in-python/)
+
+[Extract file name from path, no matter what the os/path format](https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format)
+
+[AttributeError: 'PosixPath' object has no attribute 'path'](https://stackoverflow.com/questions/59693174/attributeerror-posixpath-object-has-no-attribute-path)

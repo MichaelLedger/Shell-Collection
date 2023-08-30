@@ -2,10 +2,14 @@
 import sys
 import glob
 import pathlib
+import os
 
 from pathlib import Path
 
 print (sys.argv)
+
+#record original path, restore cd to this path before exit.
+entrance_path = os.getcwd()
 
 #def multi_extension_glob_mask(mask_base, *extensions):
 #    mask_ext = ['[{}]'.format(''.join(set(c))) for c in zip(*extensions)]
@@ -43,17 +47,55 @@ if renamed_class is None:
 if root_path is None:
     root_path = input("Enter your project absolute path:\n")
 
+# NOTE: recommand add specific prefix & suffix to locate it correctly!
 # [XXX class_method]
 # @class XXX;
-# XXX*
-# XXX *
+#  XXX*
+#  XXX *
 # @interface XXX:
 # @interface XXX :
 # #import "XXX.h" OR // XXX.h
 # #import "XXX.m" OR // XXX.m
-original_formats = ['[' + original_class + ' ', ' '+ original_class + ';', original_class + '*', original_class + ' *', ' ' + original_class + ':', ' ' + original_class + ' :', original_class + '.h', original_class + '.m']
+# @interface XXX ()
+# #pragma mark XXX OR #pragma mark - XXX
+# @implementation XXX
+# (XXX*)
+# (XXX *)
+original_formats = ['[' + original_class + ' ',
+                    ' '+ original_class + ';',
+                    ' ' + original_class + '*',
+                    ' ' + original_class + ' *',
+                    ' ' + original_class + ':',
+                    ' ' + original_class + ' :',
+                    ' ' + original_class + '.h',
+                    ' ' + original_class + '.m',
+                    '"' + original_class + '.h',
+                    '"' + original_class + '.m',
+                    ' ' + original_class + ' ',
+                    'mark ' + original_class + ' ',
+                    'mark - ' + original_class + ' ',
+                    '@implementation ' + original_class + ' ',
+                    '(' + original_class + '*',
+                    '(' + original_class + ' *'
+                    ]
 print('original_formats:', original_formats)
-renamed_formats = ['[' + renamed_class + ' ', ' '+ renamed_class + ';', renamed_class + '*', renamed_class + ' *', ' ' + renamed_class + ':', ' ' + renamed_class + ' :', renamed_class + '.h', renamed_class + '.m']
+
+renamed_formats = ['[' + renamed_class + ' ',
+                    ' '+ renamed_class + ';',
+                    ' ' + renamed_class + '*',
+                    ' ' + renamed_class + ' *',
+                    ' ' + renamed_class + ':',
+                    ' ' + renamed_class + ' :',
+                    ' ' + renamed_class + '.h',
+                    ' ' + renamed_class + '.m',
+                    '"' + renamed_class + '.h',
+                    '"' + renamed_class + '.m',
+                    ' ' + renamed_class + ' ',
+                    'mark ' + renamed_class + ' ',
+                    'mark - ' + renamed_class + ' ',
+                    '@implementation ' + renamed_class + ' ',
+                    '(' + renamed_class + '*',
+                    '(' + renamed_class + ' *']
 print('renamed_formats:', renamed_formats)
 
 #types = ('*.h', '*.m','*.mm', '*.xib', '*.storyboard', '*.swift') # the tuple of file types
@@ -69,6 +111,30 @@ print('renamed_formats:', renamed_formats)
 #So many answers that suggest globbing as many times as number of extensions, I'd prefer globbing just once instead:
 files = (p.resolve() for p in Path(root_path).glob("**/*") if p.suffix in {".h", ".m", ".mm", ".xib", ".storyboard"})
 
+# rename file name in root path
+os.chdir(root_path)
+print(os.getcwd())
+
+#try:
+#    old_file_names = [original_class + ".h", original_class + ".m", original_class + ".mm", original_class + ".xib", original_class + ".storyboard"]
+#    new_file_names = [renamed_class + ".h", renamed_class + ".m", renamed_class + ".mm", renamed_class + ".xib", renamed_class + ".storyboard"]
+#    for i in range(len(old_file_names)):
+#        old_file_name=old_file_names[i]
+#        new_file_name=new_file_names[i]
+#        print('rename file:', old_file_name, 'as', new_file_name)
+#        result=os.rename(old_file_name, new_file_name)
+#        print('result:', result)
+##        if os.path.isfile(old_file_name) and os.path.exists(old_file_name):
+##            os.rename(old_file_name, new_file_name)
+##        else:
+##            print("{old_file_name} does not exist.")
+#except FileNotFoundError:
+#    print(old_file_names, "does not exist.")
+#except FileExistsError:
+#    print(new_file_names, "does exist.")
+
+old_file_names = [original_class + ".h", original_class + ".m", original_class + ".mm", original_class + ".xib", original_class + ".storyboard"]
+
 for i, original_format in enumerate(original_formats):
     renamed_format = renamed_formats[i]
     print('will replace `', original_format, '` with `', renamed_format, '`')
@@ -82,3 +148,15 @@ for filepath in files:
             s = s.replace(original_format, renamed_format)
     with open(filepath, "w") as file:
         file.write(s)
+    exact_file_name = filepath.name
+    print('exact_file_name:', exact_file_name)
+    for i, old_file_name in enumerate(old_file_names):
+        if old_file_name == exact_file_name and os.path.isfile(filepath) and os.path.exists(filepath):
+            old_path=str(filepath)
+            print('old_path:', old_path)
+            new_path=old_path.replace(original_class, renamed_class)
+            print('rename file:', old_path, 'to', new_path)
+            os.rename(old_path, new_path)
+os.chdir(entrance_path)
+print(os.getcwd())
+sys.exit(0)
