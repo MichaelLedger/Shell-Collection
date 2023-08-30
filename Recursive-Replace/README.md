@@ -8,10 +8,14 @@ For those using Python 3.5+ you can now use a glob recursively with the use of *
 
 `replace_ios.py` replacing 'Hello' with 'Hi' for all iOS relative files(`*.{h,m,mm,xib,storyboard,swift}`).
 
+`rename_oc_class_name.py` rename Objective-C class name
+
 ## Usage
 `python3 replace.py`
 
 `python3 replace_ios.py`
+
+`python3 rename_oc_class_name.py`
 
 ## Console example:
 ```
@@ -57,3 +61,5 @@ after: Hi World!
 [Recursively find and replace string in text files](https://stackoverflow.com/questions/4205854/recursively-find-and-replace-string-in-text-files)
 
 [Python glob multiple filetypes](https://stackoverflow.com/questions/4568580/python-glob-multiple-filetypes)
+
+[How to loop with indexes in Python](https://treyhunner.com/2016/04/how-to-loop-with-indexes-in-python/)
