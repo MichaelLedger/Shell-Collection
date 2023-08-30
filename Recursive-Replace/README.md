@@ -57,37 +57,40 @@ after: Hi World!
 ```
 
 ```
-➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py A B
-['rename_oc_class_name.py', 'A', 'B']
-original_class: A
-renamed_class: B
-original_formats: ['[A ', ' A;', 'A*', 'A *', 'A:', 'A :', 'A.h', 'A.m']
-renamed_formats: ['[B ', ' B;', 'B*', 'B *', 'B:', 'B :', 'B.h', 'B.m']
-will replace ` [A  ` with ` [B  `
-will replace `  A; ` with `  B; `
-will replace ` A* ` with ` B* `
-will replace ` A * ` with ` B * `
-will replace ` A: ` with ` B: `
-will replace ` A : ` with ` B : `
-will replace ` A.h ` with ` B.h `
-will replace ` A.m ` with ` B.m `
-```
-
-```
-➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py    
+➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py                                                                       
 ['rename_oc_class_name.py']
 Enter Objective-C original class name:
 A
 Enter Objective-C renamed class name:
 B
-original_formats: ['[A ', ' A;', 'A*', 'A *', 'A:', 'A :', 'A.h', 'A.m']
-renamed_formats: ['[B ', ' B;', 'B*', 'B *', 'B:', 'B :', 'B.h', 'B.m']
+Enter your project absolute path:
+/Users/gavinxiang/Downloads/iOS_Project
+original_formats: ['[A ', ' A;', 'A*', 'A *', ' A:', ' A :', 'A.h', 'A.m']
+renamed_formats: ['[B ', ' B;', 'B*', 'B *', ' B:', ' B :', 'B.h', 'B.m']
 will replace ` [A  ` with ` [B  `
 will replace `  A; ` with `  B; `
 will replace ` A* ` with ` B* `
 will replace ` A * ` with ` B * `
-will replace ` A: ` with ` B: `
-will replace ` A : ` with ` B : `
+will replace `  A: ` with `  B: `
+will replace `  A : ` with `  B : `
+will replace ` A.h ` with ` B.h `
+will replace ` A.m ` with ` B.m `
+```
+
+```
+➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py A B /Users/gavinxiang/Downloads/iOS_Project
+['rename_oc_class_name.py', 'A', 'B', '/Users/gavinxiang/Downloads/iOS_Project']
+original_class: A
+renamed_class: B
+root_path: /Users/gavinxiang/Downloads/iOS_Project
+original_formats: ['[A ', ' A;', 'A*', 'A *', ' A:', ' A :', 'A.h', 'A.m']
+renamed_formats: ['[B ', ' B;', 'B*', 'B *', ' B:', ' B :', 'B.h', 'B.m']
+will replace ` [A  ` with ` [B  `
+will replace `  A; ` with `  B; `
+will replace ` A* ` with ` B* `
+will replace ` A * ` with ` B * `
+will replace `  A: ` with `  B: `
+will replace `  A : ` with `  B : `
 will replace ` A.h ` with ` B.h `
 will replace ` A.m ` with ` B.m `
 ```
