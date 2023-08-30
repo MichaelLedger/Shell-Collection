@@ -74,7 +74,7 @@ original_formats = ['[' + original_class + ' ',
                     ' ' + original_class + ' ',
                     'mark ' + original_class + ' ',
                     'mark - ' + original_class + ' ',
-                    '@implementation ' + original_class + ' ',
+                    '@implementation ' + original_class + '\n',
                     '(' + original_class + '*',
                     '(' + original_class + ' *'
                     ]
@@ -93,7 +93,7 @@ renamed_formats = ['[' + renamed_class + ' ',
                     ' ' + renamed_class + ' ',
                     'mark ' + renamed_class + ' ',
                     'mark - ' + renamed_class + ' ',
-                    '@implementation ' + renamed_class + ' ',
+                    '@implementation ' + renamed_class + '\n',
                     '(' + renamed_class + '*',
                     '(' + renamed_class + ' *']
 print('renamed_formats:', renamed_formats)
