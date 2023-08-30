@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+import sys
 import glob
 import pathlib
 
 from pathlib import Path
+
+print (sys.argv)
 
 #def multi_extension_glob_mask(mask_base, *extensions):
 #    mask_ext = ['[{}]'.format(''.join(set(c))) for c in zip(*extensions)]
@@ -31,8 +35,23 @@ root_path = '/Users/gavinxiang/Downloads/freeprints_ios_4/PhotoBooks/MyDealsSDK'
 #So many answers that suggest globbing as many times as number of extensions, I'd prefer globbing just once instead:
 files = (p.resolve() for p in Path(root_path).glob("**/*") if p.suffix in {".h", ".m", ".mm", ".xib", ".storyboard"})
 
-original_class = "WDPage"
-renamed_class = "FPBWDPage"
+# auto receive input arguments as class names
+try:
+    original_class = sys.argv[1]
+    print('original_class:', original_class)
+    renamed_class = sys.argv[2]
+    print('renamed_class:', renamed_class)
+except:
+    e = sys.exc_info()[0]
+    # print('error:', e)
+    original_class = None
+    renamed_class = None
+
+# remind to input class names
+if original_class is None:
+    original_class = input("Enter Objective-C original class name:\n")
+if renamed_class is None:
+    renamed_class = input("Enter Objective-C renamed class name:\n")
 
 # [XXX class_method]
 # @class XXX;

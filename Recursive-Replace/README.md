@@ -56,6 +56,42 @@ after: Hi World!
 /Users/gavinxiang/Downloads/Shell-Collection/Replace-String/Test/c/d/fake.m
 ```
 
+```
+➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py A B
+['rename_oc_class_name.py', 'A', 'B']
+original_class: A
+renamed_class: B
+original_formats: ['[A ', ' A;', 'A*', 'A *', 'A:', 'A :', 'A.h', 'A.m']
+renamed_formats: ['[B ', ' B;', 'B*', 'B *', 'B:', 'B :', 'B.h', 'B.m']
+will replace ` [A  ` with ` [B  `
+will replace `  A; ` with `  B; `
+will replace ` A* ` with ` B* `
+will replace ` A * ` with ` B * `
+will replace ` A: ` with ` B: `
+will replace ` A : ` with ` B : `
+will replace ` A.h ` with ` B.h `
+will replace ` A.m ` with ` B.m `
+```
+
+```
+➜  Recursive-Replace git:(master) ✗ python3 rename_oc_class_name.py    
+['rename_oc_class_name.py']
+Enter Objective-C original class name:
+A
+Enter Objective-C renamed class name:
+B
+original_formats: ['[A ', ' A;', 'A*', 'A *', 'A:', 'A :', 'A.h', 'A.m']
+renamed_formats: ['[B ', ' B;', 'B*', 'B *', 'B:', 'B :', 'B.h', 'B.m']
+will replace ` [A  ` with ` [B  `
+will replace `  A; ` with `  B; `
+will replace ` A* ` with ` B* `
+will replace ` A * ` with ` B * `
+will replace ` A: ` with ` B: `
+will replace ` A : ` with ` B : `
+will replace ` A.h ` with ` B.h `
+will replace ` A.m ` with ` B.m `
+```
+
 ## Reference
 
 [Recursively find and replace string in text files](https://stackoverflow.com/questions/4205854/recursively-find-and-replace-string-in-text-files)
@@ -63,3 +99,5 @@ after: Hi World!
 [Python glob multiple filetypes](https://stackoverflow.com/questions/4568580/python-glob-multiple-filetypes)
 
 [How to loop with indexes in Python](https://treyhunner.com/2016/04/how-to-loop-with-indexes-in-python/)
+
+[User input and command line arguments](https://stackoverflow.com/questions/70797/user-input-and-command-line-arguments)
