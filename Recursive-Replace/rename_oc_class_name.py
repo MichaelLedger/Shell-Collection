@@ -62,6 +62,7 @@ if root_path is None:
 # (XXX*)
 # (XXX *)
 # @interface Child : XXX
+# @interface XXX()
 original_formats = ['[' + original_class + ' ',
                     ' '+ original_class + ';',
                     ' ' + original_class + '*',
@@ -78,7 +79,8 @@ original_formats = ['[' + original_class + ' ',
                     '@implementation ' + original_class + '\n',
                     '(' + original_class + '*',
                     '(' + original_class + ' *',
-                    ' ' + original_class + '\n'
+                    ' ' + original_class + '\n',
+                    ' ' + original_class + '('
                     ]
 print('original_formats:', original_formats)
 
@@ -98,7 +100,9 @@ renamed_formats = ['[' + renamed_class + ' ',
                     '@implementation ' + renamed_class + '\n',
                     '(' + renamed_class + '*',
                     '(' + renamed_class + ' *',
-                    ' ' + renamed_class + '\n']
+                    ' ' + renamed_class + '\n',
+                    ' ' + renamed_class + '('
+                    ]
 print('renamed_formats:', renamed_formats)
 
 #types = ('*.h', '*.m','*.mm', '*.xib', '*.storyboard', '*.swift') # the tuple of file types
