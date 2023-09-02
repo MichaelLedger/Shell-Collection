@@ -10,12 +10,16 @@ For those using Python 3.5+ you can now use a glob recursively with the use of *
 
 `rename_oc_class_name.py` rename Objective-C class name
 
+`batch_rename_oc_class_name.py` batch rename Objective-C class name according to `rename_classes.json`
+
 ## Usage
 `python3 replace.py`
 
 `python3 replace_ios.py`
 
 `python3 rename_oc_class_name.py`
+
+`python3 batch_rename_oc_class_name.py`
 
 ## Console example:
 ```
@@ -95,6 +99,10 @@ will replace ` A.h ` with ` B.h `
 will replace ` A.m ` with ` B.m `
 ```
 
+```
+python3 batch_rename_oc_class_name.py <project_or_sdk_root_path>
+```
+
 ## Reference
 
 [Recursively find and replace string in text files](https://stackoverflow.com/questions/4205854/recursively-find-and-replace-string-in-text-files)
@@ -114,3 +122,15 @@ will replace ` A.m ` with ` B.m `
 [Extract file name from path, no matter what the os/path format](https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format)
 
 [AttributeError: 'PosixPath' object has no attribute 'path'](https://stackoverflow.com/questions/59693174/attributeerror-posixpath-object-has-no-attribute-path)
+
+[Convert JSON to dictionary in Python](https://www.geeksforgeeks.org/convert-json-to-dictionary-in-python/)
+
+[Iterate through dictionary keys and values in Python](https://note.nkmk.me/en/python-dict-keys-values-items/)
+
+[How to Run One Python Script From Another](https://datatofish.com/one-python-script-from-another/)
+
+[How to call a script from another script?](https://stackoverflow.com/questions/1186789/how-to-call-a-script-from-another-script)
+
+[python __pycache__的认识](https://blog.csdn.net/qq_44940689/article/details/123133515)
+
+[python中gitignore使用](https://blog.51cto.com/u_16175438/6761229)
