@@ -65,6 +65,7 @@ def main():
     # @interface Child : XXX
     # @interface XXX()
     # @"XXX"
+    # isKindOfClass:XXX.class]
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -83,7 +84,8 @@ def main():
                         '(' + original_class + ' *',
                         ' ' + original_class + '\n',
                         ' ' + original_class + '(',
-                        '"' + original_class + '"'
+                        '"' + original_class + '"',
+                        ':' + original_class + '.'
                         ]
     # print('original_formats:', original_formats)
 
@@ -105,7 +107,8 @@ def main():
                         '(' + renamed_class + ' *',
                         ' ' + renamed_class + '\n',
                         ' ' + renamed_class + '(',
-                        '"' + renamed_class + '"'
+                        '"' + renamed_class + '"',
+                        ':' + renamed_class + '.'
                         ]
     # print('renamed_formats:', renamed_formats)
 
