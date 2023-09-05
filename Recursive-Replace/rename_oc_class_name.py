@@ -182,6 +182,16 @@ def main():
                 new_path=old_path.replace(original_class, renamed_class)
                 # print('rename file:', old_path, 'to', new_path)
                 os.rename(old_path, new_path)
+                
+        # rename category files
+        category = original_class + '+'
+        if category in exact_file_name:
+            old_path=str(filepath)
+            # print('category old_path:', old_path)
+            new_path=old_path.replace(original_class, renamed_class)
+            # print('rename category file:', old_path, 'to', new_path)
+            os.rename(old_path, new_path)
+            
     os.chdir(entrance_path)
     # print(os.getcwd())
     sys.exit(0)
