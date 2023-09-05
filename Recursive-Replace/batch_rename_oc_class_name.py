@@ -31,6 +31,9 @@ def main():
         
     # Print the data of dictionary
     for k, v in data.items():
+        if k == "" or v == "":
+            print(f"skip with empty key and value: [{k}:{v}]")
+            continue
         print(k, v)
         command = 'python3 rename_oc_class_name.py ' + k + ' ' + v + ' ' + root_path
         print(command)

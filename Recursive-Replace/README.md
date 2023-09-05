@@ -134,3 +134,5 @@ python3 batch_rename_oc_class_name.py <project_or_sdk_root_path>
 [python __pycache__的认识](https://blog.csdn.net/qq_44940689/article/details/123133515)
 
 [python中gitignore使用](https://blog.51cto.com/u_16175438/6761229)
+
+[Python Print Variable – How to Print a String and Variable](https://www.freecodecamp.org/news/python-print-variable-how-to-print-a-string-and-variable/)

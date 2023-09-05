@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 def main():
-    print (sys.argv)
+    # print (sys.argv)
 
     #record original path, restore cd to this path before exit.
     entrance_path = os.getcwd()
@@ -85,7 +85,7 @@ def main():
                         ' ' + original_class + '(',
                         '"' + original_class + '"'
                         ]
-    print('original_formats:', original_formats)
+    # print('original_formats:', original_formats)
 
     renamed_formats = ['[' + renamed_class + ' ',
                         ' '+ renamed_class + ';',
@@ -107,7 +107,7 @@ def main():
                         ' ' + renamed_class + '(',
                         '"' + renamed_class + '"'
                         ]
-    print('renamed_formats:', renamed_formats)
+    # print('renamed_formats:', renamed_formats)
 
     #types = ('*.h', '*.m','*.mm', '*.xib', '*.storyboard', '*.swift') # the tuple of file types
     #for type in types:
@@ -124,7 +124,7 @@ def main():
 
     # rename file name in root path
     os.chdir(root_path)
-    print(os.getcwd())
+    # print(os.getcwd())
 
     #try:
     #    old_file_names = [original_class + ".h", original_class + ".m", original_class + ".mm", original_class + ".xib", original_class + ".storyboard"]
@@ -148,10 +148,10 @@ def main():
 
     for i, original_format in enumerate(original_formats):
         renamed_format = renamed_formats[i]
-        print('will replace `', original_format, '` with `', renamed_format, '`')
+        # print('will replace `', original_format, '` with `', renamed_format, '`')
 
     for filepath in files:
-        print(filepath)
+        # print(filepath)
         with open(filepath) as file:
             s = file.read()
             for i, original_format in enumerate(original_formats):
@@ -160,16 +160,16 @@ def main():
         with open(filepath, "w") as file:
             file.write(s)
         exact_file_name = filepath.name
-        print('exact_file_name:', exact_file_name)
+        # print('exact_file_name:', exact_file_name)
         for i, old_file_name in enumerate(old_file_names):
             if old_file_name == exact_file_name and os.path.isfile(filepath) and os.path.exists(filepath):
                 old_path=str(filepath)
-                print('old_path:', old_path)
+                # print('old_path:', old_path)
                 new_path=old_path.replace(original_class, renamed_class)
-                print('rename file:', old_path, 'to', new_path)
+                # print('rename file:', old_path, 'to', new_path)
                 os.rename(old_path, new_path)
     os.chdir(entrance_path)
-    print(os.getcwd())
+    # print(os.getcwd())
     sys.exit(0)
 
 if __name__ == "__main__":

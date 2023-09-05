@@ -1,5 +1,6 @@
 import glob
 import pathlib
+import sys
 
 from pathlib import Path
 
@@ -16,7 +17,30 @@ from pathlib import Path
 #mask = multi_extension_glob_mask('/**/*.', 'h', 'm', 'mm', 'xib', 'storyboard', 'swift')
 #print(mask)  # /**/*.[sxmh]*
 
-root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test'
+#root_path = '/Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test'
+
+# auto receive input arguments as class names
+try:
+    original_class = sys.argv[1]
+    print('original_string:', original_class)
+    renamed_class = sys.argv[2]
+    print('renamed_string:', renamed_class)
+    root_path = sys.argv[3]
+    print('root_path:', root_path)
+except:
+    e = sys.exc_info()[0]
+    # print('error:', e)
+    original_class = None
+    renamed_class = None
+    root_path = None
+
+# remind to input class names
+if original_class is None:
+    original_class = input("Enter original string:\n")
+if renamed_class is None:
+    renamed_class = input("Enter replaced string:\n")
+if root_path is None:
+    root_path = input("Enter your directory absolute path:\n")
 
 #types = ('*.h', '*.m','*.mm', '*.xib', '*.storyboard', '*.swift') # the tuple of file types
 #for type in types:
@@ -35,6 +59,6 @@ for filepath in files:
     print(filepath)
     with open(filepath) as file:
         s = file.read()
-        s = s.replace('Hello', 'Hi')
+        s = s.replace(original_class, renamed_class)
     with open(filepath, "w") as file:
         file.write(s)
