@@ -56,7 +56,7 @@ if root_path is None:
 files = (p.resolve() for p in Path(root_path).glob("**/*") if p.suffix in {".h", ".m", ".mm", ".xib", ".storyboard", ".swift"})
 
 for filepath in files:
-    print(filepath)
+    # print(filepath)
     with open(filepath) as file:
         s = file.read()
         s = s.replace(original_class, renamed_class)

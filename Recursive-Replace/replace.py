@@ -27,7 +27,7 @@ if root_path is None:
     root_path = input("Enter your directory absolute path:\n")
     
 for filepath in glob.iglob(root_path + '/**/*.txt', recursive=True):
-    print(filepath)
+    # print(filepath)
     with open(filepath) as file:
         s = file.read()
         # print('before:', s)
