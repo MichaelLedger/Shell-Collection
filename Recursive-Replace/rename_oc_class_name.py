@@ -67,6 +67,7 @@ def main():
     # @"XXX"
     # isKindOfClass:XXX.class]
     # XXX.method/property
+    # #import "YYY/XXX.h"
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -87,7 +88,8 @@ def main():
                         ' ' + original_class + '(',
                         '"' + original_class + '"',
                         ':' + original_class + '.',
-                        ' ' + original_class + '.'
+                        ' ' + original_class + '.',
+                        '/' + original_class + '.'
                         ]
     # print('original_formats:', original_formats)
 
@@ -111,7 +113,8 @@ def main():
                         ' ' + renamed_class + '(',
                         '"' + renamed_class + '"',
                         ':' + renamed_class + '.',
-                        ' ' + renamed_class + '.'
+                        ' ' + renamed_class + '.',
+                        '/' + renamed_class + '.'
                         ]
     # print('renamed_formats:', renamed_formats)
 
