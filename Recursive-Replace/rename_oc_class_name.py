@@ -66,6 +66,7 @@ def main():
     # @interface XXX()
     # @"XXX"
     # isKindOfClass:XXX.class]
+    # XXX.method/property
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -85,7 +86,8 @@ def main():
                         ' ' + original_class + '\n',
                         ' ' + original_class + '(',
                         '"' + original_class + '"',
-                        ':' + original_class + '.'
+                        ':' + original_class + '.',
+                        ' ' + original_class + '.'
                         ]
     # print('original_formats:', original_formats)
 
@@ -108,7 +110,8 @@ def main():
                         ' ' + renamed_class + '\n',
                         ' ' + renamed_class + '(',
                         '"' + renamed_class + '"',
-                        ':' + renamed_class + '.'
+                        ':' + renamed_class + '.',
+                        ' ' + renamed_class + '.'
                         ]
     # print('renamed_formats:', renamed_formats)
 
