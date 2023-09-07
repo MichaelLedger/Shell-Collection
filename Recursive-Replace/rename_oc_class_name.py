@@ -70,6 +70,7 @@ def main():
     # #import "YYY/XXX.h"
     # @property (nonatomic,strong)XXX * OR @property (nonatomic,strong)XXX*
     # #import "XXX+category.h"
+    # __weak typeof(XXX)
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -94,35 +95,37 @@ def main():
                         '/' + original_class + '.',
                         ')' + original_class + '*',
                         ')' + original_class + ' ',
-                        '"' + original_class + '+'
+                        '"' + original_class + '+',
+                        '(' + original_class + ')'
                         ]
     # print('original_formats:', original_formats)
 
     renamed_formats = ['[' + renamed_class + ' ',
-                        ' '+ renamed_class + ';',
-                        ' ' + renamed_class + '*',
-                        ' ' + renamed_class + ' *',
-                        ' ' + renamed_class + ':',
-                        ' ' + renamed_class + ' :',
-                        ' ' + renamed_class + '.h',
-                        ' ' + renamed_class + '.m',
-                        '"' + renamed_class + '.h',
-                        '"' + renamed_class + '.m',
-                        ' ' + renamed_class + ' ',
-                        'mark ' + renamed_class + ' ',
-                        'mark - ' + renamed_class + ' ',
-                        '@implementation ' + renamed_class + '\n',
-                        '(' + renamed_class + '*',
-                        '(' + renamed_class + ' *',
-                        ' ' + renamed_class + '\n',
-                        ' ' + renamed_class + '(',
-                        '"' + renamed_class + '"',
-                        ':' + renamed_class + '.',
-                        ' ' + renamed_class + '.',
-                        '/' + renamed_class + '.',
-                        ')' + renamed_class + '*',
-                        ')' + renamed_class + ' ',
-                        '"' + renamed_class + '+'
+                       ' '+ renamed_class + ';',
+                       ' ' + renamed_class + '*',
+                       ' ' + renamed_class + ' *',
+                       ' ' + renamed_class + ':',
+                       ' ' + renamed_class + ' :',
+                       ' ' + renamed_class + '.h',
+                       ' ' + renamed_class + '.m',
+                       '"' + renamed_class + '.h',
+                       '"' + renamed_class + '.m',
+                       ' ' + renamed_class + ' ',
+                       'mark ' + renamed_class + ' ',
+                       'mark - ' + renamed_class + ' ',
+                       '@implementation ' + renamed_class + '\n',
+                       '(' + renamed_class + '*',
+                       '(' + renamed_class + ' *',
+                       ' ' + renamed_class + '\n',
+                       ' ' + renamed_class + '(',
+                       '"' + renamed_class + '"',
+                       ':' + renamed_class + '.',
+                       ' ' + renamed_class + '.',
+                       '/' + renamed_class + '.',
+                       ')' + renamed_class + '*',
+                       ')' + renamed_class + ' ',
+                       '"' + renamed_class + '+',
+                       '(' + renamed_class + ')'
                         ]
     # print('renamed_formats:', renamed_formats)
 
