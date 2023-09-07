@@ -69,6 +69,7 @@ def main():
     # XXX.method/property
     # #import "YYY/XXX.h"
     # @property (nonatomic,strong)XXX * OR @property (nonatomic,strong)XXX*
+    # #import "XXX+category.h"
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -92,7 +93,8 @@ def main():
                         ' ' + original_class + '.',
                         '/' + original_class + '.',
                         ')' + original_class + '*',
-                        ')' + original_class + ' '
+                        ')' + original_class + ' ',
+                        '"' + original_class + '+'
                         ]
     # print('original_formats:', original_formats)
 
@@ -119,7 +121,8 @@ def main():
                         ' ' + renamed_class + '.',
                         '/' + renamed_class + '.',
                         ')' + renamed_class + '*',
-                        ')' + renamed_class + ' '
+                        ')' + renamed_class + ' ',
+                        '"' + renamed_class + '+'
                         ]
     # print('renamed_formats:', renamed_formats)
 
