@@ -185,7 +185,8 @@ def main():
                 
         # rename category files
         category = original_class + '+'
-        if category in exact_file_name:
+        # if category in exact_file_name://not exactly match if contains and may cause duplicated replace issue
+        if exact_file_name.startswith(category):
             old_path=str(filepath)
             # print('category old_path:', old_path)
             new_path=old_path.replace(original_class, renamed_class)
