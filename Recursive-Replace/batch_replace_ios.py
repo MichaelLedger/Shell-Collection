@@ -15,7 +15,9 @@ def main():
      
         # Print the data of dictionary
         for k, v in data.items():
-            print(k, v)
+            if k == "" or v == "":
+                continue
+            print(k, '->', v)
         
         # auto receive input arguments as class names
     try:
