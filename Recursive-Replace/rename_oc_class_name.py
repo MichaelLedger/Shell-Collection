@@ -26,6 +26,9 @@ def main():
     #print(mask)  # /**/*.[sxmh]*
 
     # auto receive input arguments as class names
+    original_class = None
+    renamed_class = None
+    root_path = None
     try:
         original_class = sys.argv[1]
         print('original_class:', original_class)
@@ -36,9 +39,6 @@ def main():
     except:
         e = sys.exc_info()[0]
         # print('error:', e)
-        original_class = None
-        renamed_class = None
-        root_path = None
 
     # remind to input class names
     if original_class is None:

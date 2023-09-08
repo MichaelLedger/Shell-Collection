@@ -19,14 +19,14 @@ def main():
                 continue
             print(k, '->', v)
         
-        # auto receive input arguments as class names
+    # auto receive input arguments as class names
+    root_path = None
     try:
         root_path = sys.argv[1]
         print('root_path:', root_path)
     except:
         e = sys.exc_info()[0]
         # print('error:', e)
-        root_path = None
 
     if root_path is None:
         root_path = input("Enter your project absolute path:\n")
