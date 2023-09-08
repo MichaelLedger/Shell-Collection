@@ -10,16 +10,50 @@ For those using Python 3.5+ you can now use a glob recursively with the use of *
 
 `rename_oc_class_name.py` rename Objective-C class name
 
-`batch_rename_oc_class_name.py` batch rename Objective-C class name according to `rename_classes.json`
+================
+
+`batch_replace.py` batch replace all files in customized formats(`".txt", ".h", ".m", ".mm", ".xib", ".storyboard", ".swift"`) according to `replace.json`
+
+`batch_replace_ios.py` batch replace iOS files in customized formats(`".h", ".m", ".mm", ".xib", ".storyboard", ".swift"`) according to `replace_ios.json`
+
+`batch_rename_oc_class_name.py` batch rename Objective-C class name in customized formats(`".h", ".m", ".mm", ".xib", ".storyboard"`) according to `rename_classes.json`
+(**Swift is not supported for now**)
 
 ## Usage
+
 `python3 replace.py`
+
+`python3 replace.py AAAA BBBB /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
+
+================
 
 `python3 replace_ios.py`
 
+`python3 replace_ios.py AAAA BBBB /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
+
+================
+
 `python3 rename_oc_class_name.py`
 
+`python3 rename_oc_class_name.py AAAA BBBB /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
+
+================
+
+`python3 batch_replace.py`
+
+`python3 batch_replace.py /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
+
+================
+
+`python3 batch_replace_ios.py`
+
+`python3 batch_replace_ios.py /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
+
+================
+
 `python3 batch_rename_oc_class_name.py`
+
+`python3 batch_rename_oc_class_name.py /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test`
 
 ## Console example:
 ```
@@ -97,6 +131,44 @@ will replace `  A: ` with `  B: `
 will replace `  A : ` with `  B : `
 will replace ` A.h ` with ` B.h `
 will replace ` A.m ` with ` B.m `
+```
+
+```
+% python3 batch_replace.py /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+Type: <class 'dict'>
+Hello -> Hi
+World -> Girls
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+Hello Hi
+python3 replace.py Hello Hi /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+original_string: Hello
+renamed_string: Hi
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+World Girls
+python3 replace.py World Girls /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+original_string: World
+renamed_string: Girls
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+skip with empty key and value: [:]
+```
+
+```
+% python3 batch_replace_ios.py /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+Type: <class 'dict'>
+Hello -> Hi
+World -> Girls
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+Hello Hi
+python3 replace_ios.py Hello Hi /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+original_string: Hello
+renamed_string: Hi
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+World Girls
+python3 replace_ios.py World Girls /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+original_string: World
+renamed_string: Girls
+root_path: /Users/gavinxiang/Downloads/Shell-Collection/Recursive-Replace/Test
+skip with empty key and value: [:]
 ```
 
 ```
