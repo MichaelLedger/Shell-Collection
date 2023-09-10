@@ -72,6 +72,7 @@ def main():
     # #import "XXX+category.h"
     # __weak typeof(XXX)
     # block:^XXX * _Nonnull{...} OR block:^XXX* _Nonnull{...}
+    # NSMutableArray <XXX *> *array; OR NSMutableArray <XXX*> *array;
     original_formats = ['[' + original_class + ' ',
                         ' '+ original_class + ';',
                         ' ' + original_class + '*',
@@ -99,7 +100,9 @@ def main():
                         '"' + original_class + '+',
                         '(' + original_class + ')',
                         '^' + original_class + ' ',
-                        '^' + original_class + '*'
+                        '^' + original_class + '*',
+                        '<' + original_class + ' ',
+                        '<' + original_class + '*'
                         ]
     # print('original_formats:', original_formats)
 
@@ -130,7 +133,9 @@ def main():
                        '"' + renamed_class + '+',
                        '(' + renamed_class + ')',
                        '^' + renamed_class + ' ',
-                       '^' + renamed_class + '*'
+                       '^' + renamed_class + '*',
+                       '<' + renamed_class + ' ',
+                       '<' + renamed_class + '*'
                         ]
     # print('renamed_formats:', renamed_formats)
 
