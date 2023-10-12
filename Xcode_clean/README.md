@@ -61,3 +61,38 @@ refer from
 [Reset Xcode. Clean, clear module cache, Derived Data and Xcode Caches. You can thank me later.](https://gist.github.com/maciekish/66b6deaa7bc979d0a16c50784e16d697)
 
 [Xcode: "is out of date and needs to be rebuilt"](https://discussions.apple.com/thread/254240507)
+
+
+# uninstall-xcode.sh
+
+Uninstall xcode completely from your mac
+
+https://developer.apple.com/forums/thread/110227
+
+Assuming you put Xcode in the Applications folder; to remove all traces of Xcode from your disk, remove:
+```
+/Applications/Xcode.app
+~/Library/Caches/com.apple.dt.Xcode
+~/Library/Developer
+~/Library/MobileDevice
+~/Library/Preferences/com.apple.dt.Xcode.plist
+/Library/Preferences/com.apple.dt.Xcode.plist
+/System/Library/Receipts/com.apple.pkg.XcodeExtensionSupport.bom
+/System/Library/Receipts/com.apple.pkg.XcodeExtensionSupport.plist
+/System/Library/Receipts/com.apple.pkg.XcodeSystemResources.bom
+/System/Library/Receipts/com.apple.pkg.XcodeSystemResources.plist
+```
+
+To scavenge your customizations, first copy these somewhere safe (folder where noted, file where noted)
+```
+~/Library/Developer/Xcode/UserData/CodeSnippets
+~/Library/Developer/Xcode/UserData/FontAndColorThemes
+~/Library/Developer/Xcode/UserData/KeyBindings
+~/Library/Developer/Xcode/Templates
+~/Library/Preferences/com.apple.dt.Xcode.plist
+~/Library/MobileDevice/Provisioning Profiles
+```
+
+Xcode has been exceptionally buggy since day 1 of it's existance... so it is good to know how to remove all of it for a re-install when your simulators don't install, when simulators are broken after install, when nothing will compile or run, when things run fine in the simulator but not on the iPhone or iPad hardware, etc.
+
+(if I forgot some trace, apologies, please reply back to complete the list)
