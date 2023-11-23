@@ -1,7 +1,7 @@
 # Clean App Extension Cache
 
 ## 使用场景
-Xcode集成改脚本，编译时自动清理旧的AppExtension的cache缓存文件，避免不同target的extension编译文件被打包后导致安装包无法安装。
+Xcode集成此脚本，编译时自动清理旧的AppExtension的cache缓存文件，避免不同target的extension编译文件被打包后导致安装包无法安装。
 
 ## 使用说明
 如果工程中包含Embed Extension
