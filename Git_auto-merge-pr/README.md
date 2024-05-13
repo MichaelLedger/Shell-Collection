@@ -1,6 +1,14 @@
 # cmd_script - Auto merge branch and pull request
 Some script for command line to improve productivity.
 
+**NOTE: push local commits before auto-merge,shell always merge branches from remote-tracking!**
+**NOTE: If conflicts exist, resolve it, git merge --continue, then run shell again to create pull-request from current merge-branch.**
+
+```
+# Merge remote-tracking branch 'origin/master' into 'origin/MD_3.67.0'
+$ sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
+```
+
 ### Preparation:
 
 Environment variable:
@@ -55,52 +63,126 @@ Hub protocol/user/oauth_token configuration:
 
 ### Command:
 
+**NOTE: push local commits before auto-merge,shell always merge branches from remote-tracking!**
+
 *merge $source_branch to $target_branch*
 `sh auto-merge-pr.sh main/sdk <target-branch> <source-branch>`
 
 ### Terminal Practice:
 ```
-% sh /Users/gavin/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_1.5 Test-Auto-Merge-And-PR-Shell
-
+➜  MyDealsSDK git:(master) sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
 hub installed
 sdk
 target_project is sdk
 -e 
 
-/Users/gavin/Downloads/freeprints_ios_3/FreePrints/MyDealsSDK
-target branch name = MD_1.5, source branch name = Test-Auto-Merge-And-PR-Shell
+/Users/gavinxiang/Downloads/MyDealsSDK
+remote: Enumerating objects: 19, done.
+remote: Counting objects: 100% (19/19), done.
+remote: Compressing objects: 100% (7/7), done.
+remote: Total 19 (delta 13), reused 16 (delta 12), pack-reused 0
+Unpacking objects: 100% (19/19), 3.34 KiB | 126.00 KiB/s, done.
+From github.com:Planetart/fp_ios_mdsdk
+   bce73c8da..589c57ab8  MD_3.66.6  -> origin/MD_3.66.6
+   6f040f869..82ccc8260  MD_3.66.8  -> origin/MD_3.66.8
+target_branch contains master
+merge branch = FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+target branch name = MD_3.67.0, source branch name = master
 -e 
 
 merge branch does not exist, create it now...
-Branch 'gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5' set up to track remote branch 'MD_1.5' from 'origin'.
-Switched to a new branch 'gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5'
+branch 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0' set up to track 'origin/MD_3.67.0'.
+Switched to a new branch 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0'
 create merge branch success
 -e 
 
-Merge made by the 'recursive' strategy.
- mydeals/basic/Networking/MDAFNetworking.m | 1 +
- 1 file changed, 1 insertion(+)
-merge success.
-Enumerating objects: 20, done.
-Counting objects: 100% (18/18), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (10/10), done.
-Writing objects: 100% (10/10), 952 bytes | 952.00 KiB/s, done.
-Total 10 (delta 6), reused 0 (delta 0)
-remote: Resolving deltas: 100% (6/6), completed with 6 local objects.
-remote: 
-remote: Create a pull request for 'gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5' on GitHub by visiting:
-remote:      https://github.com/Planetart/MyDealsSDK/pull/new/gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5
-remote: 
-To github.com:Planetart/MyDealsSDK.git
- * [new branch]        gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5 -> gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5
-Branch 'gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5' set up to track remote branch 'gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5' from 'origin'.
-push success!
-Switched to branch 'Test-Auto-Merge-And-PR-Shell'
-Deleted branch gavin_merge_shell_Test-Auto-Merge-And-PR-Shell_to_MD_1.5 (was 450b474d).
-https://github.com/Planetart/MyDealsSDK/pull/589
+Auto-merging mydeals/basic/Common/MDGlobal.m
+Auto-merging mydeals/basic/FPUtility/Helper/MDAppKeysHelper.swift
+CONFLICT (add/add): Merge conflict in mydeals/basic/FPUtility/Helper/MDAppKeysHelper.swift
+Auto-merging mydeals/basic/FPUtility/Helper/MDAppsflyerManager.m
+Automatic merge failed; fix conflicts and then commit the result.
+merge failed: 1, please resolve conflict manaully!!!
 ```
 
-merge Test-Auto-Merge-And-PR-Shell to MD_1.5 #589
-GavinXiangPlanetArt wants to merge 2 commits into MD_1.5 from gavin_merge_Test-Auto-Merge-And-PR-Shell_to_MD_1.5
+**NOTE: If conflicts exist, resolve it, git merge --continue, then run shell again to create pull-request from current merge-branch.**
 
+```
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) ✗ git st
+On branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+Your branch is up to date with 'origin/MD_3.67.0'.
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Changes to be committed:
+    modified:   mydeals/basic/Common/MDGlobal.m
+    modified:   mydeals/basic/Helper/MDStoreInAppHelper.h
+    modified:   mydeals/basic/Helper/MDStoreInAppHelper.m
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+    both added:      mydeals/basic/FPUtility/Helper/MDAppKeysHelper.swift
+
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) ✗ open mydeals/basic/FPUtility/Helper/MDAppKeysHelper.swift
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) ✗ git add .
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) ✗ git st
+On branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+Your branch is up to date with 'origin/MD_3.67.0'.
+
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+    modified:   mydeals/basic/Common/MDGlobal.m
+    modified:   mydeals/basic/Helper/MDStoreInAppHelper.h
+    modified:   mydeals/basic/Helper/MDStoreInAppHelper.m
+
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) ✗ git merge --continue
+[FPA-000-Gavin_Merge_mst_to_MD_3.67.0 454462df7] Merge remote-tracking branch 'origin/master' into MD_3.67.0
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) git st
+On branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+Your branch is ahead of 'origin/MD_3.67.0' by 28 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
+hub installed
+sdk
+target_project is sdk
+-e 
+
+/Users/gavinxiang/Downloads/MyDealsSDK
+target_branch contains master
+merge branch = FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+target branch name = MD_3.67.0, source branch name = master
+-e 
+
+branch already exists
+Already on 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0'
+Your branch is ahead of 'origin/MD_3.67.0' by 28 commits.
+  (use "git push" to publish your local commits)
+-e 
+
+Already up to date.
+merge success.
+Enumerating objects: 19, done.
+Counting objects: 100% (19/19), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 706 bytes | 706.00 KiB/s, done.
+Total 7 (delta 6), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (6/6), completed with 6 local objects.
+remote: 
+remote: Create a pull request for 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0' on GitHub by visiting:
+remote:      https://github.com/Planetart/fp_ios_mdsdk/pull/new/FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+remote: 
+To github.com:Planetart/fp_ios_mdsdk.git
+ * [new branch]          FPA-000-Gavin_Merge_mst_to_MD_3.67.0 -> FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+branch 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0' set up to track 'origin/FPA-000-Gavin_Merge_mst_to_MD_3.67.0'.
+push success!
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+Deleted branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0 (was 454462df7).
+https://github.com/Planetart/fp_ios_mdsdk/pull/6734
+```

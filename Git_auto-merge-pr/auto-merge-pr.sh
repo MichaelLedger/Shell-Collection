@@ -15,11 +15,13 @@ fi
 #The directory of the repository, please set below Environment variable before use this script
 # GIT_REPO_DIR_MAIN="/path/to/main/project/repository"
 # GIT_REPO_DIR_SDK="/path/to/sdk/repository"
-# MERGE_BRANCH_PREFIX="username_merge"
+# MERGE_BRANCH_PREFIX="username-merge"
 
-GIT_REPO_DIR_MAIN="/Users/gavin/Downloads/freeprints_ios_3"
-GIT_REPO_DIR_SDK="/Users/gavin/Downloads/freeprints_ios_3/FreePrints/MyDealsSDK"
-MERGE_BRANCH_PREFIX="gavin_merge"
+MERGE_TICKET="FPA-000"
+MERGE_AUTHOR="Gavin"
+GIT_REPO_DIR_MAIN="/Users/gavinxiang/Downloads/freeprints_ios_3"
+GIT_REPO_DIR_SDK="/Users/gavinxiang/Downloads/MyDealsSDK"
+MERGE_BRANCH_PREFIX="${MERGE_TICKET}-${MERGE_AUTHOR}-Merge"
 
 if [ -z "$GIT_REPO_DIR_MAIN" ]; then
 	echo "please set GIT_REPO_DIR_MAIN environment variable"
@@ -31,7 +33,7 @@ if [ -z "$GIT_REPO_DIR_SDK" ]; then
 fi
 if [ -z "$MERGE_BRANCH_PREFIX" ]; then
 	echo "Warning: please set MERGE_BRANCH_PREFIX environment variable"
-	MERGE_BRANCH_PREFIX="merge"
+	MERGE_BRANCH_PREFIX="Merge"
 fi
 
 
@@ -62,12 +64,13 @@ then
 
 	target_branch=$2
 	source_branch=$3
-	merge_branch="${MERGE_BRANCH_PREFIX}_${source_branch}_to_${target_branch}"
+	merge_branch="${MERGE_BRANCH_PREFIX}-${source_branch}-into-${target_branch}"
 	
+    # replace 'master' with 'Master' for merge branch name
 	if [[ $merge_branch == *"master"* ]]
 		then
 			echo "target_branch contains master"
-			merge_branch=${merge_branch//master/mst}
+			merge_branch=${merge_branch//master/Master}
 			echo "merge branch = $merge_branch"
 	fi
 
@@ -100,33 +103,50 @@ then
 
 	split
 
-
-	# git merge origin/${source_branch} -m "Merge remote-tracking branch 'origin/${source_branch}' into ${target_branch}"
+    # NOTE: always using origin branch to merge!!!
+    git merge origin/${source_branch} -m "Merge remote-tracking branch 'origin/${source_branch}' into ${target_branch}"
 	# Use local branch to merge, do not need to push local feature branch to remote.
-	git merge ${source_branch} -m "Merge remote-tracking branch '${source_branch}' into ${target_branch}"
+	# git merge ${source_branch} -m "Merge remote-tracking branch '${source_branch}' into ${target_branch}"
 	merge_result=$?
 	if [ $merge_result == 0 ]
 	then
 		echo "merge success."
 	else
-		echo "merge failed: $merge_result, please resolve conflict manaully!!!"
+		echo "merge failed: $merge_result, please resolve conflict manaully, git merge --continue, then run it agagin!👮👮👮⚠️⚠️⚠️"
 		exit
 	fi
 
 	git push -u origin ${merge_branch}:${merge_branch}
 	push_result=$?
-	if [ $push_result == 0 ] 
+	if [ $push_result == 0 ]
 	then
 		echo "push success!"
-		git switch $source_branch
-		#remove local merge branch
-		git branch -D ${merge_branch}
+    else
+        echo "push failed: $push_result"
+        exit
 	fi
 
 	#hub pull-request --base FP_3.13.0 --no-edit --head simon_fp_mydeals --reviewer Pingapplepie,JammyZ,hardawayye
-	# hub pull-request --base FP_3.13.0 --no-edit --head simon_fp_mydeals --reviewer Pingapplepie,JammyZ,hardawayye
-	hub pull-request --base $target_branch -m "merge $source_branch to $target_branch" --head $merge_branch
+    
+    #NOTE: can't review my own pull request
+    #--reviewer GavinXiangPlanetArt
+    #Error requesting reviewer: Unprocessable Entity (HTTP 422)
+    #Review cannot be requested from pull request author.
+	hub pull-request --base $target_branch -m "Merge remote-tracking branch 'origin/${source_branch}' into ${target_branch}" --head $merge_branch
+ 
+    pr_result=$?
+    if [ $pr_result == 0 ]
+    then
+        echo "pull-request generate success! 🍺🍺🍺🎉🎉🎉"
+        git switch $source_branch
+        echo "switched to branch: $source_branch"
+        #remove local merge branch
+        git branch -D ${merge_branch}
+    else
+        echo "pull-request generate failed ❌❌❌😢😢😢: $pr_result"
+        exit
+    fi
 
 else
-	echo "usage, first param is target project(main, sdk), second param is target branch, third param is source branch"
+	echo "Usage, first param is target project(main, sdk), second param is target branch, third param is source branch"
 fi
