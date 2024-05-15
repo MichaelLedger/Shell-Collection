@@ -9,7 +9,94 @@ Some script for command line to improve productivity.
 $ sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
 ```
 
-### Preparation:
+## Command Alias Usage
+
+**Cmd Alias Usage**
+```
+# Merge remote-tracking branch 'origin/master' into 'origin/MD_3.67.0'
+$ am sdk MD_3.67.0 master
+```
+
+[Bash Scripting – Working of Alias](https://www.geeksforgeeks.org/bash-scripting-working-of-alias/)
+
+### Environment configurations
+Edit `.bash_profile` by using cmds likes `nano .bash_profile' or `vim .bash_profile`.
+
+```
+➜  ~ cat .bash_profile  
+export SYSTEM_VERSION_COMPAT=0
+
+alias ..='cd ..'
+
+alias ...='cd ../../'
+
+alias l='ls -lah'
+
+alias md='x'
+x(){
+    mkdir $1
+    cd $1
+}
+
+alias am='automerge'
+automerge(){
+    sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh $1 $2 $3
+}
+
+[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/gavinxiang/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+```
+
+**Git Cmd Alias Usage**
+```
+➜  ~ cat .gitconfig
+[core]
+    excludesfile = /Users/gavinxiang/.gitignore_global
+[difftool "sourcetree"]
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path = 
+[mergetool "sourcetree"]
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
+[filter "lfs"]
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+[alias]           
+    co=checkout           
+    ci=commit           
+    st=status           
+    pl=pull           
+    ps=push           
+    dt=difftool
+    mt=mergetool           
+    l=log—stat           
+    cp=cherry-pick           
+    ca=commit-a           
+    b=branch
+    sm=submodule
+[user]
+    name = GavinXiang
+    email = gavin.xiang@planetart.cn
+[merge]
+    tool = opendiff
+[diff]
+    tool = opendiff
+[difftool]
+    prompt = false
+[pull]
+    rebase = false
+[commit]
+    template = /Users/gavinxiang/.stCommitMsg
+```
+
+### Shell Preparation:
 
 Environment variable:
 ```
