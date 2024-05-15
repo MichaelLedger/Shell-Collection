@@ -19,6 +19,8 @@ $ am sdk MD_3.67.0 master
 
 [Bash Scripting – Working of Alias](https://www.geeksforgeeks.org/bash-scripting-working-of-alias/)
 
+[How to Add an Alias in macOS with Terminal](https://presscargo.io/articles/how-to-add-an-alias-in-macos-with-terminal/)
+
 ### Environment configurations
 Edit `.bash_profile` by using cmds likes `nano .bash_profile' or `vim .bash_profile`.
 
@@ -51,6 +53,17 @@ automerge(){
 export PATH="/Users/gavinxiang/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 ```
+
+### Refresh Custom Alias
+To test your alias, type the following to refresh the shell environment:
+
+`source ~/.bash_profile`
+
+or
+
+`source ~/.zshrc`
+
+Or, you can just quit Terminal and start it up again.
 
 **Git Cmd Alias Usage**
 ```
