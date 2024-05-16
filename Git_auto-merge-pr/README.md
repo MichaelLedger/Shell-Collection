@@ -286,3 +286,50 @@ Your branch is up to date with 'origin/master'.
 Deleted branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0 (was 454462df7).
 https://github.com/Planetart/fp_ios_mdsdk/pull/6734
 ```
+
+## shell脚本执行方法
+### 有两种方法执行shell scripts，一种是新产生一个shell，然后执行相应的shell scripts；一种是在当前shell下执行，不再启用其他shell。 新产生一个shell然后再执行scripts的方法是在scripts文件开头加入语句：#!/bin/sh。一般的script文件(.sh)即是这种用法。这种方法先启用新的sub-shell（新的子进程）,然后在其下执行命令。 另外一种方法就是上面说过的source命令，不再产生新的shell，而在当前shell下执行一切命令。source: source命令即点(.)命令。在 bash下输入man source，找到source命令解释处，可以看到解释"Read and execute commands from filename in the current shell environment and ..."。从中可以知道，source命令是在当前进程中执行参数文件中的各个命令，而不是另起子进程(或sub-shell)。
+
+### source与点命令
+    •    source 命令是 bash shell 的内置命令，从 C Shell 而来。
+    •    source 命令的另一种写法是点符号，用法和 source 相同，从Bourne Shell而来。
+    •    source 命令可以强行让一个脚本去立即影响当前的环境。
+    •    source 命令会强制执行脚本中的全部命令,而忽略文件的权限。
+    •    source 命令通常用于重新执行刚修改的初始化文件，如 .bash_profile 和 .profile 等等。
+    •    source 命令可以影响执行脚本的父shell的环境，而 export 则只能影响其子shell的环境。
+
+## [改变当前shell工作目录](http://www.findme.wang/blog/detail/id/617.html)
+shell在执行脚本的时候，只是在当前的shell下开了一个子进程，所以切换目录的操作，只对该子进程中相关后续指令有效，但改变不了父进程的目录。只能利用利用source命令 `source ./jump.sh test`
+```
+#! /bin/bash
+ 
+rootDir="/home/`whoami`"
+ 
+flag=${1}
+jumpDir=""
+ 
+case $flag in
+      "goTest" | "test")    
+          jumpDir="/project/go/src/test"
+      ;;
+      "phpTest")  
+          jumpDir="/project/php/test"
+      ;;
+      "myweb")    
+          jumpDir="/project/php/findme"
+      ;;
+esac
+ 
+jumpDir="${rootDir}${jumpDir}"
+ 
+#判断目录是否存在
+if [ ! -d ${jumpDir} ] 
+    then
+     echo "${jumpDir}目录不存"
+    return
+fi
+ 
+ 
+cd ${jumpDir}
+
+```
