@@ -37,16 +37,16 @@ if [ -z "$MERGE_BRANCH_PREFIX" ]; then
 fi
 
 echo "inputs number:$#"
-if [ $#==3 ]
+if [ $# == 3 ]
 then
 	target_project=$1
 	echo $1
 	repo_dir=$GIT_REPO_DIR_MAIN
-	if [[ $target_project=="main" ]]
+	if [[ $target_project == "main" ]]
 	then
 		echo "target_project is main"
 		repo_dir=$GIT_REPO_DIR_MAIN
-	elif [[ $target_project=="sdk" ]]
+	elif [[ $target_project == "sdk" ]]
 	then
 		unset repo_dir
 		repo_dir=$GIT_REPO_DIR_SDK
@@ -67,7 +67,7 @@ then
 	merge_branch="${MERGE_BRANCH_PREFIX}-${source_branch}-into-${target_branch}"
 	
     # replace 'master' with 'Master' for merge branch name
-	if [[ $merge_branch==*"master"* ]]
+	if [[ $merge_branch == *"master"* ]]
 		then
 			echo "target_branch contains master"
 			merge_branch=${merge_branch//master/Master}
@@ -80,7 +80,7 @@ then
 
 	#remove exists remote merge_branch
 	git ls-remote --exit-code --heads origin ${merge_branch}
-	if [ $?==0 ]
+	if [ $? == 0 ]
 	then
 		echo "remove remote ${merge_branch} now..."
 		git push -d origin $merge_branch
@@ -90,7 +90,7 @@ then
 	if [ $? != 0 ]; then
 		echo "merge branch does not exist, create it now..."
 		git checkout -b $merge_branch origin/${target_branch}
-		if [ $?==0 ]; then
+		if [ $? == 0 ]; then
 			echo "create merge branch success"
 		else
 			echo "create merge branch failed"
@@ -108,7 +108,7 @@ then
 	# Use local branch to merge, do not need to push local feature branch to remote.
 	# git merge ${source_branch} -m "Merge remote-tracking branch '${source_branch}' into ${target_branch}"
 	merge_result=$?
-	if [ $merge_result==0 ]
+	if [ $merge_result == 0 ]
 	then
 		echo "merge success."
 	else
@@ -121,7 +121,7 @@ then
 
 	git push -u origin ${merge_branch}:${merge_branch}
 	push_result=$?
-	if [ $push_result==0 ]
+	if [ $push_result == 0 ]
 	then
 		echo "push success!"
     else
@@ -138,7 +138,7 @@ then
 	hub pull-request --base $target_branch -m "Merge remote-tracking branch 'origin/${source_branch}' into ${target_branch}" --head $merge_branch
  
     pr_result=$?
-    if [ $pr_result==0 ]
+    if [ $pr_result == 0 ]
     then
         echo "pull-request generate success! 🍺🍺🍺🎉🎉🎉"
         git switch $source_branch
