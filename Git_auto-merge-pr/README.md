@@ -6,7 +6,7 @@ Some script for command line to improve productivity.
 
 ```
 # Merge remote-tracking branch 'origin/master' into 'origin/MD_3.67.0'
-$ sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
+$ sh /Users/xxx/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
 ```
 
 ## Command Alias Usage
@@ -42,7 +42,7 @@ x(){
 
 alias am='automerge'
 automerge(){
-    sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh $1 $2 $3
+    sh /Users/xxx/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh $1 $2 $3
 }
 
 [[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load the default .profile
@@ -50,7 +50,7 @@ automerge(){
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/gavinxiang/.rd/bin:$PATH"
+export PATH="/Users/xxx/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 ```
 
@@ -69,7 +69,7 @@ Or, you can just quit Terminal and start it up again.
 ```
 ➜  ~ cat .gitconfig
 [core]
-    excludesfile = /Users/gavinxiang/.gitignore_global
+    excludesfile = /Users/xxx/.gitignore_global
 [difftool "sourcetree"]
     cmd = opendiff \"$LOCAL\" \"$REMOTE\"
     path = 
@@ -95,8 +95,8 @@ Or, you can just quit Terminal and start it up again.
     b=branch
     sm=submodule
 [user]
-    name = GavinXiang
-    email = gavin.xiang@planetart.cn
+    name = xxx
+    email = gavin.xiang@XXXart.cn
 [merge]
     tool = opendiff
 [diff]
@@ -106,7 +106,7 @@ Or, you can just quit Terminal and start it up again.
 [pull]
     rebase = false
 [commit]
-    template = /Users/gavinxiang/.stCommitMsg
+    template = /Users/xxx/.stCommitMsg
 ```
 
 ### Shell Preparation:
@@ -125,6 +125,8 @@ Hub protocol/user/oauth_token configuration:
 # Error creating pull request: Unauthorized (HTTP 401)
 # Bad credentials. The API can't be accessed using username/password authentication. Please create a personal access token to access this endpoint: http://github.com/settings/tokens
 # visit http://github.com/settings/tokens to new personal access token
+
+**Organization Access Token need to be authorized agagin after generated access token!!!**
 
 # https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
 #     $ git clone https://github.com/username/repo.git
@@ -149,10 +151,10 @@ Hub protocol/user/oauth_token configuration:
 # ---
 # github.com:
 # - protocol: https
-#   user: GavinXiangPlanetArt
-#   oauth_token: 038520c7c6ae81ccecba75f8c6554d7d06dd9d6d
+#   user: MichaelLedger
+#   oauth_token: ghp_XXXXXXXXXXXXXXXXXXXXXXXXX
 
-# After setting ~/.config/hub, it works: https://github.com/Planetart/MyDealsSDK/pull/589
+# After setting ~/.config/hub, it works: https://github.com/XXXart/MyDealsSDK/pull/589
 
 # https://hub.github.com/hub.1.html
 #     GitHub OAuth authentication
@@ -170,19 +172,19 @@ Hub protocol/user/oauth_token configuration:
 
 ### Terminal Practice:
 ```
-➜  MyDealsSDK git:(master) sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
+➜  MyDealsSDK git:(master) sh /Users/xxx/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
 hub installed
 sdk
 target_project is sdk
 -e 
 
-/Users/gavinxiang/Downloads/MyDealsSDK
+/Users/xxx/Downloads/MyDealsSDK
 remote: Enumerating objects: 19, done.
 remote: Counting objects: 100% (19/19), done.
 remote: Compressing objects: 100% (7/7), done.
 remote: Total 19 (delta 13), reused 16 (delta 12), pack-reused 0
 Unpacking objects: 100% (19/19), 3.34 KiB | 126.00 KiB/s, done.
-From github.com:Planetart/fp_ios_mdsdk
+From github.com:XXXart/fp_ios_mdsdk
    bce73c8da..589c57ab8  MD_3.66.6  -> origin/MD_3.66.6
    6f040f869..82ccc8260  MD_3.66.8  -> origin/MD_3.66.8
 target_branch contains master
@@ -246,13 +248,13 @@ Your branch is ahead of 'origin/MD_3.67.0' by 28 commits.
   (use "git push" to publish your local commits)
 
 nothing to commit, working tree clean
-➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) sh /Users/gavinxiang/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
+➜  MyDealsSDK git:(FPA-000-Gavin_Merge_mst_to_MD_3.67.0) sh /Users/xxx/Downloads/Shell-Collection/Git_auto-merge-pr/auto-merge-pr.sh sdk MD_3.67.0 master
 hub installed
 sdk
 target_project is sdk
 -e 
 
-/Users/gavinxiang/Downloads/MyDealsSDK
+/Users/xxx/Downloads/MyDealsSDK
 target_branch contains master
 merge branch = FPA-000-Gavin_Merge_mst_to_MD_3.67.0
 target branch name = MD_3.67.0, source branch name = master
@@ -275,16 +277,16 @@ Total 7 (delta 6), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (6/6), completed with 6 local objects.
 remote: 
 remote: Create a pull request for 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0' on GitHub by visiting:
-remote:      https://github.com/Planetart/fp_ios_mdsdk/pull/new/FPA-000-Gavin_Merge_mst_to_MD_3.67.0
+remote:      https://github.com/XXXart/fp_ios_mdsdk/pull/new/FPA-000-Gavin_Merge_mst_to_MD_3.67.0
 remote: 
-To github.com:Planetart/fp_ios_mdsdk.git
+To github.com:XXXart/fp_ios_mdsdk.git
  * [new branch]          FPA-000-Gavin_Merge_mst_to_MD_3.67.0 -> FPA-000-Gavin_Merge_mst_to_MD_3.67.0
 branch 'FPA-000-Gavin_Merge_mst_to_MD_3.67.0' set up to track 'origin/FPA-000-Gavin_Merge_mst_to_MD_3.67.0'.
 push success!
 Switched to branch 'master'
 Your branch is up to date with 'origin/master'.
 Deleted branch FPA-000-Gavin_Merge_mst_to_MD_3.67.0 (was 454462df7).
-https://github.com/Planetart/fp_ios_mdsdk/pull/6734
+https://github.com/XXXart/fp_ios_mdsdk/pull/6734
 ```
 
 ## shell脚本执行方法
