@@ -1,0 +1,7 @@
+ {
+    "key_id": "xxxxxxxxxx",
+    "issuer_id": "xxxxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "key": "-----BEGIN PRIVATE KEY-----\nXXXXXXXXXXXXXXXXXX\n-----END PRIVATE KEY-----",
+    "duration": 60,
+    "in_house": false
+  }

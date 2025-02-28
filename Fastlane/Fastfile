@@ -1,0 +1,648 @@
+import "./MatchCerts.rb"
+import_from_git(
+    url: "git@github.com:MichaelLedger/fastools.git", # The URL of the repository to import the Fastfile from.
+    #branch: "master", # The branch to checkout on the repository
+    path: "lib/fastlane/fastlane.firebase.rb", # The path of the Fastfile in the repository
+    version: "0.1.10" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
+)
+require 'plist'
+
+#----------- App Store Connect         --------------
+CONNECT_KEY_ID = "XXXXXXXXXX"
+CONNECT_ISSUER_ID = "XXXXXXXX-XXXX"
+CONNECT_KEY_FILEPATH = "./fastlane/AuthKey.p8"
+
+#----------- App Store Connect         --------------
+# App store connect
+connect_key_id = CONNECT_KEY_ID
+connect_issuer_id = CONNECT_ISSUER_ID
+connect_key_filepath = CONNECT_KEY_FILEPATH
+
+
+HOCKEY_APP_ID_XXus='xxx'
+HOCKEY_APP_ID_XXuk='xxx'
+HOCKEY_APP_ID_XXfr='xxx'
+HOCKEY_APP_ID_XXde='xxx'
+HOCKEY_APP_ID_XXit='xxx'
+HOCKEY_APP_ID_XXes='xxx'
+HOCKEY_APP_ID_XXie='xxx'
+HOCKEY_APP_ID_XXnl='xxx'
+
+HOCKEY_APP_API_TOKEN='xxx'
+
+target_name = ENV['TARGET_NAME']
+scheme = ENV['SCHEME']
+output_path = "./build/"
+build_num = Integer(IO.popen('git rev-list --count HEAD').gets) - 5200
+build_number_input = ENV['BUILD_NUM']
+app_name = ""
+if build_number_input
+    build_num = build_number_input
+end
+
+xcode_path = ENV['XCODE_PATH']
+
+puts("Current dir ==> #{Dir.pwd}")
+parent = File.expand_path("..", Dir.pwd)
+puts("Parent dir ==> #{parent}")
+workspace = File.dirname(parent)
+puts("Workspace dir ==> #{workspace}")
+puts("FASTLANE_BUILD_NUMBER=#{build_num.to_s}==>myenv.properties")
+
+app_identifier = "com.michaelledger.XXxx"
+app_extension_id = "com.michaelledger.XXxx.notificationServiceExt-xx"
+app_background_download_extension_id = "com.michaelledger.XXxx.backgroundDownloadExt-xx"
+app_share_extension_id = ""
+hockey_id = 'xxxxxxx'
+target_up = target_name.upcase
+target_down = target_name.downcase
+dd_path = "DerivedData/#{target_up}"
+
+targets = Array["DE", "ES", "FR", "IE", "IT", "NL", "UK", "US","CA"]
+isIncluded = targets.include?(target_up)
+
+if isIncluded
+    scheme = "XX#{target_down}"
+    app_identifier = "com.michaelledger.XX#{target_down}"
+    app_extension_id = "com.michaelledger.XX#{target_down}.notificationServiceExt-#{target_down}"
+    app_background_download_extension_id = "com.michaelledger.XX#{target_down}.backgroundDownloadExt-#{target_down}"
+    if target_up == "CA"
+        app_identifier = "com.michaelledger.XXcanada"
+        app_extension_id = "com.michaelledger.XXcanada.notificationServiceExt-#{target_down}"
+        app_background_download_extension_id = "com.michaelledger.XXcanada.backgroundDownloadExt-#{target_down}"
+        app_share_extension_id = app_identifier + ".#{scheme}Share"
+    elsif target_up != "US"
+        app_share_extension_id = app_identifier + ".#{scheme}Share"
+    end
+end
+
+if target_up == "DE"
+    hockey_id = HOCKEY_APP_ID_XXde
+    app_name = "DE-XXX"
+elsif target_up == "ES"
+    hockey_id = HOCKEY_APP_ID_XXes
+    app_name = "ES-XXX"
+elsif target_up == "FR"
+    hockey_id = HOCKEY_APP_ID_XXfr
+    app_name = "FR-XXX"
+elsif target_up == "IE"
+    hockey_id = HOCKEY_APP_ID_XXie
+    app_name = "IE-XXX"
+elsif target_up == "IT"
+    hockey_id = HOCKEY_APP_ID_XXit
+    app_name = "IT-XXX"
+elsif target_up == "NL"
+    hockey_id = HOCKEY_APP_ID_XXnl
+    app_name = "NL-BE-PL-XXX"
+elsif target_up == "UK"
+    hockey_id = HOCKEY_APP_ID_XXuk
+    app_name = "UK-XXX"
+elsif target_up == "CA"
+    app_name = "CA-XXX"
+elsif target_up == "US"
+    hockey_id = HOCKEY_APP_ID_XXus
+    app_name = "US-XXX"
+    app_identifier = "com.novadevelopment.XXX"
+    app_extension_id = "com.novadevelopment.XXX.notificationServiceExt-us"
+    app_background_download_extension_id = "com.novadevelopment.XXX.backgroundDownloadExt-us"
+    app_share_extension_id = app_identifier + '.XXusShare'
+    puts("app_share_extension_id====#{app_share_extension_id}")
+end
+
+puts "Does current target exist? #{isIncluded}. scheme = #{scheme}, app_identifier = #{app_identifier}, app_ext_id = #{app_extension_id}, app_background_download_ext_id = #{app_background_download_extension_id}"
+puts "output_path #{output_path}, hockey_id = #{hockey_id},  derived_data_path = #{dd_path}"
+
+def fillCopyrightYear(XXath)
+    year = Time.now.year
+    File.open(XXath,"r") do |lines|
+        ss = "2012-" + year.to_s
+        buffer = lines.read.gsub(/2012-\d{4}/,ss)
+        File.open(XXath,"w"){|l|
+            l.write(buffer)
+        }
+    end
+end
+
+def searchCopyrightPlist
+    puts "================> Modify the year of copyright."
+    plistArray = []
+    pathArray = Dir["../XX*"]
+    for dir in pathArray
+        puts dir
+        subDirs1 = Dir[dir+"/Settings.bundle/Root.plist"]
+        subDirs2 = Dir[dir+"/Setting.plist"]
+        for path in subDirs1
+            plistArray.push(path)
+        end
+        for path in subDirs2
+            plistArray.push(path)
+        end
+    end
+    subDirs3 = Dir["../Common/Resources/Text/Setting-*.plist"]
+    puts subDirs3
+    for path in subDirs3
+        plistArray.push(path)
+    end
+
+    puts "=============== plist array is "
+    puts plistArray
+    for p in plistArray
+        fillCopyrightYear p
+    end
+end
+
+
+default_platform(:ios)
+
+platform :ios do
+    desc "Set build num as svn revision"
+    lane :set_build_num do
+        puts "Set build number as #{build_num}"
+        increment_build_number(
+            build_number: build_num
+        )
+    end
+
+    desc "Push a adhoc build to App Center and a release build to the App Store"
+    lane :all do
+        appcenter_pgy
+        release
+    end
+
+    desc "Push a new release build to the App Store"
+    lane :release do
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = false
+        searchCopyrightPlist
+        delete_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_appstore(readonly: true)
+        gym(
+		    workspace: "XXX.xcworkspace",
+		    scheme: scheme,
+		    export_options: {
+                thinning: "<none>",
+                iCloudContainerEnvironment: "Production",
+                uploadSymbols:  true,
+			    compileBitcode: false
+		    },
+            export_method: "app-store",
+            configuration: "Release",
+            derived_data_path: dd_path
+	    )
+        deliver(
+            submit_for_review: false,
+            automatic_release: false,
+            force: true, # Skip HTMl report verification
+            skip_metadata: true,
+            skip_screenshots: true,
+            ipa:"./XXX.ipa",
+            app_identifier:app_identifier,
+            run_precheck_before_submit:false
+        )
+        # appstore(
+        #     skip_metadata: true,
+        #     skip_screenshots: true,
+        #     app_identifier: app_identifier,
+        #     precheck_include_in_app_purchases: false
+        # )
+    end
+    
+    desc "Push a new build to TestFlight without bumping the app version in App Connect"
+    lane :testflight do
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = false
+        searchCopyrightPlist
+        delete_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_appstore(readonly: true)
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+                thinning: "<none>",
+                iCloudContainerEnvironment: "Production",
+                uploadSymbols:  true,
+                compileBitcode: false
+            },
+            export_method: "app-store",
+            configuration: "Release",
+            derived_data_path: dd_path
+        )
+        appstore(
+            skip_metadata: true,
+            skip_screenshots: true,
+            skip_app_version_update: true,
+            app_identifier: app_identifier,
+	    precheck_include_in_app_purchases: false
+        )
+    end
+    
+    desc "Push a new build to App Center and PGY"
+    lane :appcenter_pgy do
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = true
+        searchCopyrightPlist
+        fill_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_adhoc(readonly: true)
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+                thinning: "<none>",
+                iCloudContainerEnvironment: "Production",
+                uploadSymbols:  true,
+                compileBitcode: false
+            },
+            export_method: "ad-hoc",
+            configuration: "Release",
+            derived_data_path: dd_path
+        )
+        # use commit logs as update desc
+	    commit_msgs = changelog_from_git_commits(
+			commits_count: 10,
+			pretty: "- %s",
+			merge_commit_filtering: "exclude_merges"
+		)
+		msgArray = commit_msgs.split("\n")
+		filteredNotes = ""
+		msgArray.each { |item|
+			strAppend = item.gsub("#comment", "")
+			filteredNotes += (strAppend + "\n")
+		}
+        pgyer(api_key: "xxx", update_description: filteredNotes, install_type: "1", oversea: 1) # user_key: "xxx"
+        push_appcenter
+    end
+
+    desc "Push a new build to App Center"
+    lane :appcenter do
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = true
+        searchCopyrightPlist
+        fill_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_adhoc(readonly: true)
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+		        thinning: "<none>",
+		        iCloudContainerEnvironment: "Production",
+		        uploadSymbols:  true,
+		        compileBitcode: false
+            },
+            export_method: "ad-hoc",
+            configuration: "Release",
+            derived_data_path: dd_path
+        )
+	    push_appcenter
+    end
+
+    lane :pgy do
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = true
+        searchCopyrightPlist
+        fill_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_adhoc(readonly: true)
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+		        thinning: "<none>",
+		        iCloudContainerEnvironment: "Production",
+		        uploadSymbols:  true,
+		        compileBitcode: false
+            },
+            export_method: "ad-hoc",
+            configuration: "Release",
+            derived_data_path: dd_path
+        )
+        # use commit logs as update desc
+	    commit_msgs = changelog_from_git_commits(
+			commits_count: 10,
+			pretty: "- %s",
+			merge_commit_filtering: "exclude_merges"
+		)
+		msgArray = commit_msgs.split("\n")
+		filteredNotes = ""
+		msgArray.each { |item|
+			strAppend = item.gsub("#comment", "")
+			filteredNotes += (strAppend + "\n")
+		}
+        pgyer(api_key: "xxx", update_description: filteredNotes, install_type: "1", oversea: 1) # user_key: "xxx"
+    end
+    
+	desc "Upload the ipa and dSYM to hockeyapp"
+	lane :push_appcenter do
+		commit_msgs = changelog_from_git_commits(
+			commits_count: 10,
+			pretty: "- %s",
+			merge_commit_filtering: "exclude_merges"
+		)
+		msgArray = commit_msgs.split("\n")
+		filteredNotes = ""
+		msgArray.each { |item|
+			strAppend = item.gsub("#comment", "")
+			filteredNotes += (strAppend + "\n")
+		}
+		puts("filteredNotes are #{filteredNotes}")
+		appcenter_upload(
+			api_token: HOCKEY_APP_API_TOKEN,
+			owner_name: "michaelledger",
+			app_name: app_name,
+			ipa: "./XXX.ipa",
+			notify_testers: true,
+			release_notes: filteredNotes,
+			destinations: "XX%20Internal,QA,Developer",
+			destination_type: "group"
+		)
+	end
+
+
+    desc "Fetch appstore provisioning profiles"
+    lane :profile_appstore do
+        sigh(
+            force: false,
+            app_identifier: app_identifier,
+            development: false,
+            output_path: output_path
+        )
+        sigh(
+            force: false,
+            app_identifier: app_extension_id,
+            development: false,
+            output_path: output_path
+        )
+        sigh(
+            force: false,
+            app_identifier: app_background_download_extension_id,
+            development: false,
+            output_path: output_path
+        )
+        if app_share_extension_id != ""
+            sigh(
+            force: false,
+            app_identifier: app_share_extension_id,
+            development: false,
+            output_path: output_path
+            )
+        end
+    end
+
+    desc "Fetch adhoc provisioning profiles"
+    lane :profile_adhoc do
+        sigh(
+            adhoc: true,
+            force: false,
+            app_identifier: app_identifier,
+            output_path: output_path
+        )
+        sigh(
+            adhoc: true,
+            force: false,
+            app_identifier: app_extension_id,
+            output_path: output_path
+        )
+        sigh(
+            adhoc: true,
+            force: false,
+            app_identifier: app_background_download_extension_id,
+            output_path: output_path
+        )
+        if app_share_extension_id != ""
+            sigh(
+            force: false,
+            app_identifier: app_share_extension_id,
+            development: false,
+            output_path: output_path
+        )
+        end
+    end
+
+    desc "Compile the project only"
+    lane :compile_only do
+        authenticating_with_apple_services
+        profile_adhoc
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+                method: "ad-hoc",
+                iCloudContainerEnvironment: "Production",
+                uploadSymbols:  true,
+                compileBitcode: false
+            },
+            configuration: "Release",
+            skip_package_ipa: true,
+            skip_archive: true,
+            derived_data_path: dd_path
+        )
+    end
+
+    desc "Fill in development environment flag"
+    lane :fill_development_environment_flag do
+        plistArray = []
+        pathArray = Dir["../XX*"]
+        for dir in pathArray
+            subDirs = Dir[dir+"/XX*-Info.plist"]
+            for path in subDirs
+                plistArray.push(path)
+            end
+        end
+        puts plistArray
+        for XXath in plistArray
+            plist_data = Plist.parse_xml(XXath)
+            plist_data["DevelopmentEnv"] = true
+            Plist::Emit.save_plist(plist_data, XXath)
+        end
+    end
+
+    desc "Delete development environment flag"
+    lane :delete_development_environment_flag do
+        plistArray = []
+        pathArray = Dir["../XX*"]
+        for dir in pathArray
+            subDirs = Dir[dir+"/XX*-Info.plist"]
+            for path in subDirs
+                plistArray.push(path)
+            end
+        end
+        puts plistArray
+        for XXath in plistArray
+            plist_data = Plist.parse_xml(XXath)
+            plist_data.delete("DevelopmentEnv")
+            Plist::Emit.save_plist(plist_data, XXath)
+        end
+    end
+
+    desc "Fill in debug id for Amplitude"
+    lane :fill_debug_amplitude_id do
+        plistArray = []
+        pathArray = Dir["../XX*"]
+        for dir in pathArray
+            subDirs = Dir[dir+"/XX*-Info.plist"]
+            for path in subDirs
+                plistArray.push(path)
+            end
+        end
+        
+	puts "======= fill in debug Amplitude id for AppCenter build"
+        puts plistArray
+        for XXath in plistArray
+            File.open(XXath,"r") do |lines|
+                pid = "xxx"
+                dbgid = "xxx"
+                buffer = lines.read.gsub(pid,dbgid)
+                File.open(XXath,"w"){|l|
+                    l.write(buffer)
+                }
+            end
+        end
+    end
+
+    desc "Fill in production id for Amplitude"
+    lane :fill_production_amplitude_id do
+        plistArray = []
+        pathArray = Dir["../XX*"]
+        for dir in pathArray
+            subDirs = Dir[dir+"/XX*-Info.plist"]
+            for path in subDirs
+                plistArray.push(path)
+            end
+        end
+        
+	puts "======= fill in production Amplitude id for AppCenter build"
+        puts plistArray
+        for XXath in plistArray
+            File.open(XXath,"r") do |lines|
+                pid = "xxx"
+                dbgid = "xxx"
+                buffer = lines.read.gsub(dbgid,pid)
+                File.open(XXath,"w"){|l|
+                    l.write(buffer)
+                }
+            end
+        end
+    end
+
+    desc "Authenticating with Apple services"
+    lane :authenticating_with_apple_services do
+        app_store_connect_api_key(
+            key_id: connect_key_id,
+            issuer_id: connect_issuer_id,
+            key_filepath: connect_key_filepath,
+            duration: 500, # optional (maximum 1200)
+            in_house: false # optional but may be required if using match/sigh
+          )
+    end
+
+    desc "Review submodules commit-id"
+    lane :review_submodules do |options|
+        review_submodules_commit(options)
+    end
+
+    desc "check firebase tools installed"
+    lane :check_and_use_firebase_tools do
+        # check firebase-tools install status
+        unless system("firebase --version > /dev/null 2>&1")
+          UI.message("firebase-tools is not installed. Installing now...")
+          if system("npm install -g firebase-tools")
+            UI.success("firebase-tools installed successfully.")
+          else
+            UI.error("Failed to install firebase-tools. Please ensure Node.js and npm are installed.")
+            return
+          end
+        else
+          UI.message("firebase-tools is already installed.")
+        end
+    end
+    
+    desc "Push a new build to App Center pgy and firebase appdistribution"
+    lane :appcenter_pgy_appdistribution do
+        appcenter_pgy
+        appdistribution
+    end
+
+    desc "Push a new build to pgy and firebase appdistribution"
+    lane :pgy_appdistribution do
+        pgy
+        appdistribution
+    end
+    
+    desc "Push a new build to firebase appdistribution"
+    lane :appdistribution do
+
+        commit_msgs = changelog_from_git_commits(
+			commits_count: 10,
+			pretty: "- %s",
+			merge_commit_filtering: "exclude_merges"
+		)
+		msgArray = commit_msgs.split("\n")
+		release_notes = ""
+		msgArray.each { |item|
+			strAppend = item.gsub("#comment", "")
+			release_notes += (strAppend + "\n")
+		}
+		app_id = ENV['FIREBASE_APP_ID']
+        ipa_path = ENV['FIREBASE_IPA_PATH']
+        token = ENV['FIREBASE_TOKEN']
+        groups = ENV['FIREBASE_GROUP']
+        unless File.exist?("fastlane/Pluginfile") && File.read("fastlane/Pluginfile").include?("fastlane-plugin-firebase_app_distribution")
+            UI.message("Installing firebase_app_distribution plugin...")
+            sh("bundle exec fastlane add_plugin firebase_app_distribution")
+        end
+        UI.message("#{token}=======token")
+        firebase_app_distribution(
+          app: app_id,
+          service_credentials_file: token, # Use the credentials_file for authentication
+          ipa_path: ipa_path,  # Replace with the actual path to your IPA file
+          groups:groups,       # Specify the testers group
+          release_notes: release_notes # Optional release notes
+        )
+    end
+
+    desc "Push a new build to App Center"
+    lane :firebase_app_build_distribution do
+        UI.success("start build app")
+        if xcode_path
+            xcode_select(xcode_path)
+        end
+        adhoc = true
+        searchCopyrightPlist
+        fill_development_environment_flag
+        set_build_num
+        authenticating_with_apple_services
+        match_adhoc(readonly: true)
+        gym(
+            workspace: "XXX.xcworkspace",
+            scheme: scheme,
+            export_options: {
+		        thinning: "<none>",
+		        iCloudContainerEnvironment: "Production",
+		        uploadSymbols:  true,
+		        compileBitcode: false
+            },
+            export_method: "ad-hoc",
+            configuration: "Release",
+            derived_data_path: dd_path
+        )
+	    appdistribution
+    end
+end
