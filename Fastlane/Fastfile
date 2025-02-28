@@ -1,10 +1,31 @@
 import "./MatchCerts.rb"
 import_from_git(
     url: "git@github.com:MichaelLedger/fastools.git", # The URL of the repository to import the Fastfile from.
+    #branch: "develop", # The branch to checkout on the repository
+    path: "lib/fastlane/fastlane.version.rb", # The path of the Fastfile in the repository
+    version: "0.2.1" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
+  )
+
+  import_from_git(
+    url: "git@github.com:MichaelLedger/fastools.git", # The URL of the repository to import the Fastfile from.
+    #branch: "develop", # The branch to checkout on the repository
+    path: "lib/fastlane/fastlane.shared.rb", # The path of the Fastfile in the repository
+    version: "0.2.1" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
+  )
+
+  import_from_git(
+    url: "git@github.com:MichaelLedger/fastools.git", # The URL of the repository to import the Fastfile from.
+    #branch: "develop", # The branch to checkout on the repository
+    path: "lib/fastlane/fastlane.pods.rb", # The path of the Fastfile in the repository
+    version: "0.2.1" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
+  )
+
+  import_from_git(
+    url: "git@github.com:MichaelLedger/fastools.git", # The URL of the repository to import the Fastfile from.
     #branch: "master", # The branch to checkout on the repository
-    path: "lib/fastlane/fastlane.firebase.rb", # The path of the Fastfile in the repository
-    version: "0.1.10" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
-)
+    path: "lib/fastlane/fastlane.match.rb", # The path of the Fastfile in the repository
+    version: "0.2.1" # The version to checkout on the repository. Optimistic match operator can be used to select the latest version within constraints.
+  )
 require 'plist'
 
 #----------- App Store Connect         --------------

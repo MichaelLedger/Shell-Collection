@@ -100,21 +100,21 @@ token3 = os.getenv('CLEAN_JENKINS_TOKEN3')
 
 
 if server == "FP":
-    print("cleaning 10.4.2.4")
+    print("cleaning x.x.2.4")
     
-    doDeleteTasks(token1, "10.4.2.4", "{}/.jenkins/workspace")
+    doDeleteTasks(token1, "x.x.2.4", "{}/.jenkins/workspace")
     doDeleteArchives("{}/Library/Developer/Xcode/Archives")
 
 elif server == "SA":
-    print("cleaning 10.4.3.2")
+    print("cleaning x.x.3.2")
     
-    doDeleteTasks(token3, "10.4.3.2", "{}/Jenkins/projects")
+    doDeleteTasks(token3, "x.x.3.2", "{}/Jenkins/projects")
     doDeleteArchives("{}/Library/Developer/Xcode/Archives")
 
 elif server == "FP_SA":
-    print("cleaning 10.4.2.2")
+    print("cleaning x.x.2.2")
 
-    doDeleteTasks(token2, "10.4.2.2", "{}/Volumes/ExDisk/Jenkins-workspace")
+    doDeleteTasks(token2, "x.x.2.2", "{}/Volumes/ExDisk/Jenkins-workspace")
     doDeleteArchives("{}/Volumes/ExDisk/Xcode/Archives")
 
 
