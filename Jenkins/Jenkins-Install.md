@@ -390,3 +390,14 @@ alias jenkins='sh ~/.jenkins/startJenkins.sh'
 % jenkins
 
 
+### diff start methods for machines installed diff versions jenkins
+// startJenkins.sh
+10.4.2.2
+% java -Dhudson.util.ProcessTreeKiller.disable=true -jar jenkins.war --httpPort=8080
+
+10.4.2.4
+% Jenkins
+Running from: /usr/local/Cellar/jenkins/2.242/libexec/jenkins.war
+
+10.4.2.5
+/opt/homebrew/opt/openjdk@17/bin/java -Dmail.smtp.starttls.enable=true -jar /opt/homebrew/opt/jenkins-lts/libexec/jenkins.war --httpListenAddress=10.4.2.5 --httpPort=8080
