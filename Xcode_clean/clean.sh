@@ -15,4 +15,6 @@ sudo rm -rf ~/Library/Developer/Xcode/Archives
 sudo rm -rf ~/Library/Developer/Xcode/DerivedData
 sudo rm -rf ~/Library/Developer/Xcode/iOS\ Device\ Logs
 sudo rm -rf ~/Library/Developer/Xcode/Products
-sudo rm -rf ~/Library/Developer/CoreSimulator/Devices 
+sudo rm -rf ~/Library/Developer/CoreSimulator/Devices
+echo "Remove outdated download files from the cache of downloaded packages maintained by Homebrew"
+sudo brew cleanup
