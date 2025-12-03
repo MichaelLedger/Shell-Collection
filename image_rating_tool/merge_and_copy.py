@@ -11,10 +11,10 @@ import os
 from pathlib import Path
 
 # Define paths
-RATINGS_CSV = "/Users/gavinxiang/Downloads/image_rating_tool/results/ratings.csv"
-TARGET_CSV = "/Users/gavinxiang/Downloads/UIQA-Exercise/csvfiles/uhd-iqa-training-metadata-v2.csv"
-SOURCE_IMAGES = "/Users/gavinxiang/Downloads/image_rating_tool/uploads"
-TARGET_IMAGES = "/Users/gavinxiang/Downloads/MLDataset/UHD-IQA/challenge/training"
+RATINGS_CSV = "/Users/macminiai/VSCODE_Projects/image_rating_tool/results/ratings.csv"
+TARGET_CSV = "/Users/macminiai/VSCODE_Projects/BestPhotos/UIQA/csvfiles/uhd-iqa-training-metadata-v2.csv"
+SOURCE_IMAGES = "/Users/macminiai/VSCODE_Projects/image_rating_tool/uploads"
+TARGET_IMAGES = "/Users/macminiai/VSCODE_Projects/BestPhotos/UHD-IQA/challenge/training"
 
 def read_csv_to_dict(filepath):
     """Read CSV file and return as list of dicts"""

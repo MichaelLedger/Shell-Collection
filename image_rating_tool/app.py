@@ -113,6 +113,87 @@ def load_all_rated_images() -> List[Tuple[Image.Image, str]]:
     return gallery_items
 
 
+def get_image_names_list() -> List[str]:
+    """Get list of all image names from ratings.csv."""
+    if not RATINGS_CSV.exists():
+        return []
+    try:
+        df = pd.read_csv(RATINGS_CSV)
+        return df['image_name'].tolist()
+    except Exception:
+        return []
+
+
+def delete_image_and_rating(image_name: str) -> Tuple[bool, str]:
+    """Delete an image from uploads/ and remove its entry from ratings.csv.
+    Returns (success, message).
+    """
+    if not image_name:
+        return False, "No image selected."
+    
+    # Remove from CSV
+    if RATINGS_CSV.exists():
+        try:
+            df = pd.read_csv(RATINGS_CSV)
+            if image_name not in df['image_name'].values:
+                return False, f"Image '{image_name}' not found in ratings."
+            df = df[df['image_name'] != image_name]
+            df.to_csv(RATINGS_CSV, index=False)
+        except Exception as e:
+            return False, f"Failed to update CSV: {str(e)}"
+    
+    # Delete image file
+    img_path = UPLOADS_DIR / image_name
+    if img_path.exists():
+        try:
+            img_path.unlink()
+        except Exception as e:
+            return False, f"Failed to delete image file: {str(e)}"
+    
+    return True, f"Successfully deleted '{image_name}'."
+
+
+def update_image_score(image_name: str, new_score: float) -> Tuple[bool, str]:
+    """Update the score for an image in ratings.csv.
+    Returns (success, message).
+    """
+    if not image_name:
+        return False, "No image selected."
+    
+    # Validate score
+    ok, val, msg = validate_score(new_score)
+    if not ok:
+        return False, msg
+    
+    if not RATINGS_CSV.exists():
+        return False, "No ratings file exists."
+    
+    try:
+        df = pd.read_csv(RATINGS_CSV)
+        if image_name not in df['image_name'].values:
+            return False, f"Image '{image_name}' not found in ratings."
+        
+        df.loc[df['image_name'] == image_name, 'quality_mos'] = val
+        df.to_csv(RATINGS_CSV, index=False)
+        return True, f"Successfully updated score for '{image_name}' to {val:.4f}."
+    except Exception as e:
+        return False, f"Failed to update score: {str(e)}"
+
+
+def get_image_score(image_name: str) -> float:
+    """Get the current score for an image from ratings.csv."""
+    if not image_name or not RATINGS_CSV.exists():
+        return 0.7
+    try:
+        df = pd.read_csv(RATINGS_CSV)
+        match = df[df['image_name'] == image_name]
+        if not match.empty:
+            return float(match['quality_mos'].iloc[0])
+    except Exception:
+        pass
+    return 0.7
+
+
 def validate_score(value) -> Tuple[bool, float, str]:
     """Validate a score is a valid float between 0 and 1. Returns (ok, float_value, message)."""
     if value is None or value == "":
@@ -135,7 +216,40 @@ def make_app():
         save_thresholds_json(thresholds, str(THRESHOLDS_JSON))
     ranges = format_ranges(thresholds)
 
-    with gr.Blocks(title="Manual Image Rating Tool") as demo:
+    # Custom CSS to align edit section elements
+    custom_css = """
+    .edit-section-row {
+        align-items: stretch !important;
+        margin-bottom: 16px !important;
+    }
+    .edit-left-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+    .edit-right-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+    .selected-preview img {
+        transform: none !important;
+        transition: none !important;
+    }
+    .selected-preview img:hover {
+        transform: none !important;
+    }
+    .selected-preview .image-container {
+        transform: none !important;
+    }
+    .selected-preview .image-container:hover {
+        transform: none !important;
+    }
+    """
+    
+    with gr.Blocks(title="Manual Image Rating Tool", css=custom_css) as demo:
         gr.Markdown("# Manual Image Rating Tool")
 
         with gr.Row():
@@ -162,14 +276,47 @@ def make_app():
         # Gallery section to show all saved images with scores
         gr.Markdown("---")
         gr.Markdown("## All Saved Images with Scores")
+        
+        # Edit/Delete section (above gallery)
+        gr.Markdown("### Edit or Delete Selected Image")
+        with gr.Row(elem_classes="edit-section-row", equal_height=True):
+            with gr.Column(scale=2, elem_classes="edit-left-col"):
+                selected_image_dropdown = gr.Dropdown(
+                    label="Select Image to Edit/Delete",
+                    choices=[],
+                    interactive=True,
+                    allow_custom_value=False
+                )
+                edit_score_input = gr.Number(
+                    value=0.7,
+                    minimum=0.0,
+                    maximum=1.0,
+                    step=0.001,
+                    label="New Score (0.0-1.0)"
+                )
+                update_score_btn = gr.Button("Update Score", variant="primary", interactive=False)
+            with gr.Column(scale=1, elem_classes="edit-right-col"):
+                selected_image_preview = gr.Image(
+                    label="Selected Image Preview",
+                    height=120,
+                    interactive=False,
+                    elem_classes="selected-preview"
+                )
+                delete_btn = gr.Button("🗑️ Delete Image", variant="stop", interactive=False)
+        
+        edit_status = gr.Markdown(visible=False)
+        
+        # Gallery below edit section
         refresh_gallery_btn = gr.Button("Refresh Gallery", variant="secondary")
         saved_gallery = gr.Gallery(
-            label="All Rated Images",
+            label="All Rated Images (Click an image to select it for edit/delete)",
             show_label=True,
-            columns=4,
-            rows=3,
-            height="auto",
-            object_fit="contain"
+            columns=6,
+            rows=5,
+            height=600,
+            object_fit="contain",
+            show_download_button=False,
+            interactive=False
         )
 
         download_csv = gr.File(label="Download Ratings CSV")
@@ -247,7 +394,7 @@ def make_app():
         def save(files, *scores):
             try:
                 if not files:
-                    return gr.update(visible=True, value="❌ No files uploaded."), None, []
+                    return gr.update(visible=True, value="❌ No files uploaded."), None, [], gr.update()
                 
                 # Build filename -> score map with validation
                 name_to_score: Dict[str, float] = {}
@@ -257,7 +404,7 @@ def make_app():
                     
                     ok, val, msg = validate_score(score_val)
                     if not ok:
-                        return gr.update(visible=True, value=f"❌ '{fname}': {msg}"), None, []
+                        return gr.update(visible=True, value=f"❌ '{fname}': {msg}"), None, [], gr.update()
                     
                     name_to_score[fname] = val
 
@@ -270,19 +417,22 @@ def make_app():
                         saved_name = save_image_with_numeric_name(img, base)
                         saved_rows.append((saved_name, name_to_score[base]))
                     except Exception as e:
-                        return gr.update(visible=True, value=f"❌ Failed to save '{base}': {str(e)}"), None, []
+                        return gr.update(visible=True, value=f"❌ Failed to save '{base}': {str(e)}"), None, [], gr.update()
 
                 # Append to CSV
                 append_ratings(saved_rows)
                 
-                # Load all rated images for gallery
+                # Reload all rated images from disk for gallery
                 gallery_items = load_all_rated_images()
                 
-                return gr.update(visible=True, value=f"✅ Successfully saved {len(saved_rows)} ratings."), str(RATINGS_CSV), gallery_items
+                # Update dropdown with new image names
+                names = get_image_names_list()
+                
+                return gr.update(visible=True, value=f"✅ Successfully saved {len(saved_rows)} ratings."), str(RATINGS_CSV), gallery_items, gr.update(choices=names)
                 
             except Exception as e:
                 import traceback
-                return gr.update(visible=True, value=f"❌ Error: {str(e)}\n{traceback.format_exc()}"), None, []
+                return gr.update(visible=True, value=f"❌ Error: {str(e)}\n{traceback.format_exc()}"), None, [], gr.update()
 
         # Wire up events
         uploader_outputs = []
@@ -293,7 +443,7 @@ def make_app():
         uploader.upload(update_inputs, inputs=[uploader], outputs=uploader_outputs)
         
         save_inputs = [files_state] + [score for _, _, _, score in score_inputs_list]
-        save_btn.click(save, inputs=save_inputs, outputs=[status, download_csv, saved_gallery])
+        save_btn.click(save, inputs=save_inputs, outputs=[status, download_csv, saved_gallery, selected_image_dropdown])
         
         def download_csv_handler():
             csv_path = build_download_csv()
@@ -303,11 +453,194 @@ def make_app():
             """Refresh the gallery with all saved images."""
             return load_all_rated_images()
         
-        dl_btn.click(download_csv_handler, outputs=[download_csv])
-        refresh_gallery_btn.click(refresh_gallery, outputs=[saved_gallery])
+        def refresh_dropdown():
+            """Refresh the dropdown with current image names."""
+            names = get_image_names_list()
+            return gr.update(choices=names, value=None)
         
-        # Load gallery on startup
-        demo.load(refresh_gallery, outputs=[saved_gallery])
+        def refresh_all():
+            """Refresh both gallery and dropdown."""
+            gallery = load_all_rated_images()
+            names = get_image_names_list()
+            return gallery, gr.update(choices=names, value=None)
+        
+        def on_image_select(image_name):
+            """When an image is selected from dropdown, show preview and load its score."""
+            if not image_name:
+                # No image selected - disable buttons
+                return None, 0.7, gr.update(interactive=False), gr.update(interactive=False)
+            
+            # Load image preview
+            img_path = UPLOADS_DIR / image_name
+            if img_path.exists():
+                try:
+                    img = Image.open(img_path).convert("RGB")
+                    score = get_image_score(image_name)
+                    # Image selected - enable buttons
+                    return img, score, gr.update(interactive=True), gr.update(interactive=True)
+                except Exception:
+                    pass
+            return None, 0.7, gr.update(interactive=False), gr.update(interactive=False)
+        
+        def on_gallery_select(evt: gr.SelectData):
+            """When an image is clicked in gallery, select it in dropdown."""
+            names = get_image_names_list()
+            if evt.value and isinstance(evt.value, dict) and 'caption' in evt.value:
+                caption = evt.value['caption']
+                # Extract image name from caption (format: "filename - Score: X.XXXX")
+                if ' - Score:' in caption:
+                    image_name = caption.split(' - Score:')[0]
+                    img_path = UPLOADS_DIR / image_name
+                    if img_path.exists():
+                        try:
+                            img = Image.open(img_path).convert("RGB")
+                            score = get_image_score(image_name)
+                            # Image selected - enable buttons
+                            return gr.update(choices=names, value=image_name), img, score, gr.update(interactive=True), gr.update(interactive=True)
+                        except Exception:
+                            pass
+            # No image selected - disable buttons
+            return gr.update(choices=names, value=None), None, 0.7, gr.update(interactive=False), gr.update(interactive=False)
+        
+        def handle_delete(image_name, current_gallery):
+            """Handle delete button click."""
+            if not image_name:
+                return (
+                    gr.update(visible=True, value="❌ Please select an image first."),
+                    gr.update(),  # Don't reload gallery
+                    gr.update(),  # Don't reload dropdown
+                    gr.update(),
+                    gr.update(),
+                    gr.update(interactive=False),  # Disable update button
+                    gr.update(interactive=False)   # Disable delete button
+                )
+            
+            success, msg = delete_image_and_rating(image_name)
+            
+            if success:
+                # Remove deleted image from current gallery without full reload
+                names = get_image_names_list()
+                # Filter out the deleted image from current gallery data
+                new_gallery = []
+                if current_gallery:
+                    for item in current_gallery:
+                        # Gallery item can be tuple (img, caption) or dict
+                        if isinstance(item, tuple) and len(item) >= 2:
+                            img, caption = item[0], item[1]
+                            # Check if this is the deleted image
+                            if not caption.startswith(f"{image_name} - Score:"):
+                                new_gallery.append((img, caption))
+                        elif isinstance(item, dict):
+                            caption = item.get('caption', '')
+                            if not caption.startswith(f"{image_name} - Score:"):
+                                new_gallery.append(item)
+                
+                return (
+                    gr.update(visible=True, value=f"✅ {msg}"),
+                    new_gallery,
+                    gr.update(choices=names, value=None),
+                    None,
+                    0.7,
+                    gr.update(interactive=False),  # Disable update button after delete
+                    gr.update(interactive=False)   # Disable delete button after delete
+                )
+            else:
+                return (
+                    gr.update(visible=True, value=f"❌ {msg}"),
+                    gr.update(),  # Don't reload on error
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),
+                    gr.update(),  # Keep button state
+                    gr.update()   # Keep button state
+                )
+        
+        def handle_update_score(image_name, new_score, current_gallery):
+            """Handle update score button click."""
+            if not image_name:
+                return (
+                    gr.update(visible=True, value="❌ Please select an image first."),
+                    gr.update(),  # Don't reload gallery
+                    gr.update()
+                )
+            
+            success, msg = update_image_score(image_name, new_score)
+            
+            if success:
+                # Update only the changed image's caption in current gallery (no reload)
+                updated_gallery = []
+                new_caption = f"{image_name} - Score: {new_score:.4f}"
+                
+                if current_gallery:
+                    for item in current_gallery:
+                        # Gallery item can be tuple (img, caption) or dict
+                        if isinstance(item, tuple) and len(item) >= 2:
+                            img, caption = item[0], item[1]
+                            # Check if this is the updated image
+                            if caption.startswith(f"{image_name} - Score:"):
+                                updated_gallery.append((img, new_caption))
+                            else:
+                                updated_gallery.append((img, caption))
+                        elif isinstance(item, dict):
+                            caption = item.get('caption', '')
+                            img = item.get('image', item)
+                            if caption.startswith(f"{image_name} - Score:"):
+                                updated_gallery.append({'image': img, 'caption': new_caption})
+                            else:
+                                updated_gallery.append(item)
+                
+                return (
+                    gr.update(visible=True, value=f"✅ {msg}"),
+                    updated_gallery,
+                    new_score
+                )
+            else:
+                return (
+                    gr.update(visible=True, value=f"❌ {msg}"),
+                    gr.update(),  # Don't reload on error
+                    gr.update()
+                )
+        
+        def on_startup():
+            """Initialize gallery and dropdown on startup."""
+            gallery = load_all_rated_images()
+            names = get_image_names_list()
+            return gallery, gr.update(choices=names, value=None)
+        
+        dl_btn.click(download_csv_handler, outputs=[download_csv])
+        refresh_gallery_btn.click(refresh_all, outputs=[saved_gallery, selected_image_dropdown])
+        
+        # Dropdown selection handler
+        selected_image_dropdown.change(
+            on_image_select,
+            inputs=[selected_image_dropdown],
+            outputs=[selected_image_preview, edit_score_input, update_score_btn, delete_btn]
+        )
+        
+        # Gallery click handler
+        saved_gallery.select(
+            on_gallery_select,
+            outputs=[selected_image_dropdown, selected_image_preview, edit_score_input, update_score_btn, delete_btn]
+        )
+        
+        # Delete button handler with confirmation
+        delete_btn.click(
+            fn=handle_delete,
+            inputs=[selected_image_dropdown, saved_gallery],
+            outputs=[edit_status, saved_gallery, selected_image_dropdown, selected_image_preview, edit_score_input, update_score_btn, delete_btn],
+            js="(image_name, gallery) => { if (!confirm('Are you sure you want to delete this image? This action cannot be undone.')) { throw new Error('cancelled'); } return [image_name, gallery]; }"
+        )
+        
+        # Update score button handler with confirmation
+        update_score_btn.click(
+            fn=handle_update_score,
+            inputs=[selected_image_dropdown, edit_score_input, saved_gallery],
+            outputs=[edit_status, saved_gallery, edit_score_input],
+            js="(image_name, score, gallery) => { if (!confirm('Are you sure you want to update the score for this image?')) { throw new Error('cancelled'); } return [image_name, score, gallery]; }"
+        )
+        
+        # Load gallery and dropdown on startup
+        demo.load(on_startup, outputs=[saved_gallery, selected_image_dropdown])
 
     return demo
 
