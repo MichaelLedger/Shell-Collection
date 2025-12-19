@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Script to:
-1. Merge ratings.csv with uhd-iqa-training-metadata-v2.csv
-2. Copy images from uploads folder to training folder
+1. Merge ratings.csv with uhd-iqa-validation-metadata-v2.csv
+2. Copy images from uploads folder to validation folder
 """
 
 import csv
@@ -11,10 +11,10 @@ import os
 from pathlib import Path
 
 # Define paths
-RATINGS_CSV = "/Users/macminiai/VSCODE_Projects/image_rating_tool/results/ratings.csv"
-TARGET_CSV = "/Users/macminiai/VSCODE_Projects/BestPhotos/UIQA/csvfiles/uhd-iqa-training-metadata-v2.csv"
-SOURCE_IMAGES = "/Users/macminiai/VSCODE_Projects/image_rating_tool/uploads"
-TARGET_IMAGES = "/Users/macminiai/VSCODE_Projects/BestPhotos/UHD-IQA/challenge/training"
+RATINGS_CSV = "/Users/macminiai/VSCODE_Projects/image_rating_tool_validation/results/ratings.csv"
+TARGET_CSV = "/Users/macminiai/VSCODE_Projects/BestPhotos/UIQA/csvfiles/uhd-iqa-validation-metadata-v2.csv"
+SOURCE_IMAGES = "/Users/macminiai/VSCODE_Projects/image_rating_tool_validation/uploads"
+TARGET_IMAGES = "/Users/macminiai/VSCODE_Projects/BestPhotos/UHD-IQA/challenge/validation"
 
 def read_csv_to_dict(filepath):
     """Read CSV file and return as list of dicts"""
@@ -30,7 +30,7 @@ def write_csv_from_dict(filepath, data, fieldnames):
         writer.writerows(data)
 
 def merge_csv_files():
-    """Merge ratings from ratings.csv into uhd-iqa-training-metadata-v2.csv"""
+    """Merge ratings from ratings.csv into uhd-iqa-validation-metadata-v2.csv"""
     print("=" * 60)
     print("Step 1: Merging CSV files")
     print("=" * 60)
@@ -74,11 +74,13 @@ def merge_csv_files():
     # Sort by image_name for consistency (extract numeric part if present)
     def sort_key(row):
         name = row['image_name']
+        # Remove extension properly using os.path.splitext
+        base_name = os.path.splitext(name)[0]
         # Try to extract numeric part for proper sorting
         try:
-            return int(name.replace('.jpg', '').replace('.png', ''))
-        except:
-            return name
+            return (0, int(base_name))
+        except ValueError:
+            return (1, base_name)  # Non-numeric names sort after numeric ones
     
     target_data.sort(key=sort_key)
     
@@ -99,7 +101,7 @@ def merge_csv_files():
     return updated_count, new_count
 
 def copy_images():
-    """Copy images from uploads folder to training folder"""
+    """Copy images from uploads folder to validation folder"""
     print("\n" + "=" * 60)
     print("Step 2: Copying images")
     print("=" * 60)
@@ -112,8 +114,13 @@ def copy_images():
     
     source_path = Path(SOURCE_IMAGES)
     
-    # Get list of images to copy
-    image_files = list(source_path.glob("*.jpg")) + list(source_path.glob("*.png"))
+    # Get list of images to copy (all common image formats)
+    image_files = (
+        list(source_path.glob("*.jpg")) + 
+        list(source_path.glob("*.jpeg")) + 
+        list(source_path.glob("*.png")) + 
+        list(source_path.glob("*.webp"))
+    )
     
     if not image_files:
         print(f"\n  No images found in {SOURCE_IMAGES}")
