@@ -635,7 +635,8 @@ platform :ios do
           service_credentials_file: token, # Use the credentials_file for authentication
           ipa_path: ipa_path,  # Replace with the actual path to your IPA file
           groups:groups,       # Specify the testers group
-          release_notes: release_notes # Optional release notes
+          release_notes: release_notes, # Optional release notes
+	  upload_timeout: 600 # 10 minutes timeout for large IPA uploads (default: 300)
         )
     end
 
