@@ -99,9 +99,60 @@ neighbors = get_neighbors(cell_id, k=1)
 print(len(neighbors))  # 7 (center + 6 neighbors)
 ```
 
+## Reverse Geocoding API
+
+You can use the [LocationIQ](https://locationiq.com) API to convert GPS coordinates to address information.
+
+### API Endpoint
+
+```
+https://us1.locationiq.com/v1/reverse?key=<API_KEY>&lat=<LATITUDE>&lon=<LONGITUDE>&format=json
+```
+
+### Example
+
+**Request:**
+```bash
+curl "https://us1.locationiq.com/v1/reverse?key=pk.059fd15e362a73f7f0a8392b43a27d87&lat=36.099857&lon=-115.26179&format=json"
+```
+
+**Response:**
+```json
+{
+  "place_id": "331443034397",
+  "lat": "36.099911",
+  "lon": "-115.261943",
+  "display_name": "7825, Geyser Hill Lane, Spanish Trails, Spring Valley, Clark County, Nevada, 89147, USA",
+  "address": {
+    "house_number": "7825",
+    "road": "Geyser Hill Lane",
+    "neighbourhood": "Spanish Trails",
+    "city": "Spring Valley",
+    "county": "Clark County",
+    "state": "Nevada",
+    "postcode": "89147",
+    "country": "United States of America",
+    "country_code": "us"
+  }
+}
+```
+
+### Response Fields
+
+| Field | Description |
+|-------|-------------|
+| `lat`, `lon` | Corrected coordinates |
+| `display_name` | Full formatted address |
+| `address.city` | City name |
+| `address.county` | County name |
+| `address.state` | State/Province |
+| `address.postcode` | ZIP/Postal code |
+| `address.country` | Country name |
+
 ## Resources
 
 - [H3 Documentation](https://h3geo.org)
 - [H3 API Reference](https://h3geo.org/docs/api/indexing)
 - [H3 GitHub](https://github.com/uber/h3)
 - [Resolution Table](https://h3geo.org/docs/core-library/restable)
+- [LocationIQ API](https://locationiq.com/docs)
