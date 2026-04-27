@@ -31,6 +31,10 @@ THRESHOLDS_JSON = RESULTS_DIR / "thresholds.json"
 # Absolute path to training CSV in the main project
 TRAIN_CSV_PATH = ROOT_DIR / "train.csv"
 
+# Maximum number of pre-allocated batch queue rows. This is the practical cap on how
+# many images can be queued for per-row score editing in a single batch.
+BATCH_MAX_ROWS = 200
+
 
 def ensure_dirs() -> None:
     UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
@@ -732,6 +736,7 @@ def make_app():
     
     batch_picker_head_js = """
 <script>
+window.__bpMaxRows = __BP_MAX_ROWS__;
 (function(){
   if (window.__bpInit) return;
   window.__bpInit = true;
@@ -798,7 +803,7 @@ def make_app():
     var ta = getScoresProxy();
     if (!ta) return;
     var vals = [];
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < window.__bpMaxRows; i++) {
       var el = document.querySelector('#bp_row_score_' + i + ' input');
       if (!el) { vals.push(null); continue; }
       var v = el.value;
@@ -854,6 +859,7 @@ def make_app():
 })();
 </script>
 """
+    batch_picker_head_js = batch_picker_head_js.replace("__BP_MAX_ROWS__", str(BATCH_MAX_ROWS))
     with gr.Blocks(title="Manual Image Rating Tool", css=custom_css, head=batch_picker_head_js) as demo:
         gr.Markdown("# Manual Image Rating Tool")
 
@@ -905,10 +911,10 @@ def make_app():
             interactive=True,
         )
         batch_clear_btn = gr.Button("Clear batch queue", variant="secondary")
-        gr.Markdown("#### Queued images — score per row (max 15)")
+        gr.Markdown("#### Queued images — score per row")
         batch_rows_list: List[Tuple] = []
         with gr.Column():
-            for _bi in range(15):
+            for _bi in range(BATCH_MAX_ROWS):
                 with gr.Row(visible=False) as batch_row:
                     batch_thumb = gr.Image(
                         label="",
@@ -1468,7 +1474,7 @@ def make_app():
                 batch_selected_state,
                 *batch_queue_outputs_flat,
             ],
-            js="(_proxy) => { if (!confirm('Apply the score from each row to its queued image?')) { throw new Error('cancelled'); } var vals=[]; for (var i=0;i<15;i++){ var el=document.querySelector('#bp_row_score_'+i+' input'); if(!el){vals.push(null);continue;} var v=el.value; if(v===''||v==null){vals.push(null);} else { var f=parseFloat(v); vals.push(isNaN(f)?null:f); } } return [JSON.stringify(vals)]; }",
+            js="(_proxy) => { if (!confirm('Apply the score from each row to its queued image?')) { throw new Error('cancelled'); } var vals=[]; var n=window.__bpMaxRows||200; for (var i=0;i<n;i++){ var el=document.querySelector('#bp_row_score_'+i+' input'); if(!el){vals.push(null);continue;} var v=el.value; if(v===''||v==null){vals.push(null);} else { var f=parseFloat(v); vals.push(isNaN(f)?null:f); } } return [JSON.stringify(vals)]; }",
         )
 
         demo.load(
