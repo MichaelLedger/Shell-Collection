@@ -882,33 +882,6 @@ def make_app():
         gr.Markdown("---")
         gr.Markdown("## All Saved Images with Scores")
         
-        # Edit/Delete section (above gallery)
-        gr.Markdown("### Edit or Delete Selected Image")
-        with gr.Row(elem_classes="edit-section-row", equal_height=True):
-            with gr.Column(scale=2, elem_classes="edit-left-col"):
-                selected_image_dropdown = gr.Dropdown(
-                    label="Select Image to Edit/Delete",
-                    choices=[],
-                    interactive=True,
-                    allow_custom_value=False
-                )
-                edit_score_input = gr.Number(
-                    value=0.7,
-                    minimum=0.0,
-                    maximum=1.0,
-                    step=0.001,
-                    label="New Score (0.0-1.0)"
-                )
-                update_score_btn = gr.Button("Update Score", variant="primary", interactive=False)
-            with gr.Column(scale=1, elem_classes="edit-right-col"):
-                selected_image_preview = gr.Image(
-                    label="Selected Image Preview",
-                    height=120,
-                    interactive=False,
-                    elem_classes="selected-preview"
-                )
-                delete_btn = gr.Button("🗑️ Delete Image", variant="stop", interactive=False)
-        
         gr.Markdown("### Batch operations (thumbnail picker)")
         gr.Markdown(
             "Click thumbnails in the **batch picker** below to add or remove images from the queue "
@@ -1031,12 +1004,11 @@ def make_app():
             batch_delete_btn = gr.Button("🗑️ Batch delete queued", variant="stop")
             batch_update_scores_btn = gr.Button("Apply batch scores", variant="primary")
         
-        edit_status = gr.Markdown(visible=False)
+        batch_status = gr.Markdown(visible=False)
         
-        # Gallery below edit section
         refresh_gallery_btn = gr.Button("Refresh Gallery", variant="secondary")
         saved_gallery = gr.Gallery(
-            label="All Rated Images (Click an image to select it for edit/delete)",
+            label="All Rated Images",
             show_label=True,
             columns=6,
             rows=5,
@@ -1159,7 +1131,6 @@ def make_app():
                         gr.update(visible=True, value="❌ No files uploaded."),
                         None,
                         [],
-                        gr.update(),
                         *_tail(pruned),
                     )
 
@@ -1175,7 +1146,6 @@ def make_app():
                             gr.update(visible=True, value=f"❌ '{fname}': {msg}"),
                             None,
                             [],
-                            gr.update(),
                             *_tail(pruned),
                         )
 
@@ -1194,7 +1164,6 @@ def make_app():
                             gr.update(visible=True, value=f"❌ Failed to save '{base}': {str(e)}"),
                             None,
                             [],
-                            gr.update(),
                             *_tail(pruned),
                         )
 
@@ -1202,14 +1171,12 @@ def make_app():
                 append_ratings(saved_rows)
 
                 gallery_items = load_all_rated_images()
-                names = get_image_names_list()
                 pruned2 = prune_batch_queue(batch_state)
 
                 return (
                     gr.update(visible=True, value=f"✅ Successfully saved {len(saved_rows)} ratings."),
                     str(RATINGS_CSV),
                     gallery_items,
-                    gr.update(choices=names, value=None),
                     *_tail(pruned2),
                 )
 
@@ -1221,7 +1188,6 @@ def make_app():
                     gr.update(visible=True, value=f"❌ Error: {str(e)}\n{traceback.format_exc()}"),
                     None,
                     [],
-                    gr.update(),
                     *_tail(pruned_e),
                 )
 
@@ -1243,7 +1209,6 @@ def make_app():
                 status,
                 download_csv,
                 saved_gallery,
-                selected_image_dropdown,
                 batch_picker_html,
                 batch_state_proxy,
                 batch_selected_state,
@@ -1259,183 +1224,23 @@ def make_app():
             """Refresh the gallery with all saved images."""
             return load_all_rated_images()
         
-        def refresh_dropdown():
-            """Refresh the dropdown with current image names."""
-            names = get_image_names_list()
-            return gr.update(choices=names, value=None)
-        
         def refresh_all(batch_state: List[str] | None):
-            """Refresh main gallery, dropdown, batch picker HTML, and pruned batch queue UI."""
+            """Refresh main gallery, batch picker HTML, and pruned batch queue UI."""
             gallery = load_all_rated_images()
-            names = get_image_names_list()
             pruned = prune_batch_queue(batch_state)
             return (
                 gallery,
-                gr.update(choices=names, value=None),
                 build_batch_picker_html(pruned),
                 json.dumps(pruned),
                 pruned,
                 *render_batch_queue_updates(pruned),
             )
-        
-        def on_image_select(image_name):
-            """When an image is selected from dropdown, show preview and load its score."""
-            if not image_name:
-                # No image selected - disable buttons
-                return None, 0.7, gr.update(interactive=False), gr.update(interactive=False)
-            
-            # Load image preview
-            img_path = UPLOADS_DIR / image_name
-            if img_path.exists():
-                try:
-                    img = Image.open(img_path).convert("RGB")
-                    score = get_image_score(image_name)
-                    # Image selected - enable buttons
-                    return img, score, gr.update(interactive=True), gr.update(interactive=True)
-                except Exception:
-                    pass
-            return None, 0.7, gr.update(interactive=False), gr.update(interactive=False)
-        
-        def on_gallery_select(evt: gr.SelectData):
-            """When an image is clicked in gallery, select it in dropdown and load preview."""
-            names = get_image_names_list()
-            gallery_names = get_rated_image_names_gallery_order()
-            idx = _gallery_select_index(evt)
-            image_name = None
-            if idx is not None and gallery_names and 0 <= idx < len(gallery_names):
-                image_name = gallery_names[idx]
-            elif evt.value and isinstance(evt.value, dict) and "caption" in evt.value:
-                caption = evt.value["caption"]
-                if " - Score:" in caption:
-                    image_name = caption.split(" - Score:")[0]
-            if image_name:
-                img_path = UPLOADS_DIR / image_name
-                if img_path.exists():
-                    try:
-                        img = Image.open(img_path).convert("RGB")
-                        score = get_image_score(image_name)
-                        return (
-                            gr.update(choices=names, value=image_name),
-                            img,
-                            score,
-                            gr.update(interactive=True),
-                            gr.update(interactive=True),
-                        )
-                    except Exception:
-                        pass
-            return (
-                gr.update(choices=names, value=None),
-                None,
-                0.7,
-                gr.update(interactive=False),
-                gr.update(interactive=False),
-            )
-        
-        def _delete_output_tail(
-            batch_state: List[str] | None,
-            deleted_name: str | None,
-            refresh_picker: bool = True,
-        ):
-            pr = prune_batch_queue(
-                [n for n in (batch_state or []) if not deleted_name or n != deleted_name]
-            )
-            if refresh_picker:
-                picker: object = build_batch_picker_html(pr)
-                proxy: object = json.dumps(pr)
-            else:
-                picker = gr.skip()
-                proxy = gr.skip()
-            return (
-                picker,
-                proxy,
-                pr,
-                *render_batch_queue_updates(pr),
-            )
 
-        def handle_delete(image_name, batch_state: List[str] | None):
-            """Handle delete button click; reload main gallery and batch queue from disk."""
-            if not image_name:
-                tail = _delete_output_tail(batch_state, None, refresh_picker=False)
-                return (
-                    gr.update(visible=True, value="❌ Please select an image first."),
-                    gr.update(),
-                    gr.update(),
-                    *tail,
-                    None,
-                    0.7,
-                    gr.update(interactive=False),
-                    gr.update(interactive=False),
-                )
-
-            success, msg = delete_image_and_rating(image_name)
-
-            if success:
-                names = get_image_names_list()
-                gallery_items = load_all_rated_images()
-                tail = _delete_output_tail(batch_state, image_name)
-                return (
-                    gr.update(visible=True, value=f"✅ {msg}"),
-                    gr.update(value=gallery_items, selected_index=None),
-                    gr.update(choices=names, value=None),
-                    *tail,
-                    None,
-                    0.7,
-                    gr.update(interactive=False),
-                    gr.update(interactive=False),
-                )
-            tail = _delete_output_tail(batch_state, None, refresh_picker=False)
-            return (
-                gr.update(visible=True, value=f"❌ {msg}"),
-                gr.update(),
-                gr.update(),
-                *tail,
-                gr.update(),
-                gr.update(),
-                gr.update(),
-                gr.update(),
-            )
-        
-        def handle_update_score(
-            image_name, new_score, _current_gallery, batch_state: List[str] | None
-        ):
-            """Handle update score button click; reload main gallery and HTML batch picker."""
-            if not image_name:
-                return (
-                    gr.update(visible=True, value="❌ Please select an image first."),
-                    gr.update(),
-                    gr.update(),
-                    gr.update(),
-                    gr.update(),
-                )
-
-            success, msg = update_image_score(image_name, new_score)
-
-            if success:
-                gallery_items = load_all_rated_images()
-                score = get_image_score(image_name)
-                q = prune_batch_queue(batch_state)
-                return (
-                    gr.update(visible=True, value=f"✅ {msg}"),
-                    gr.update(value=gallery_items, selected_index=None),
-                    build_batch_picker_html(q),
-                    json.dumps(q),
-                    score,
-                )
-            return (
-                gr.update(visible=True, value=f"❌ {msg}"),
-                gr.update(),
-                gr.update(),
-                gr.update(),
-                gr.update(),
-            )
-        
         def on_startup():
-            """Initialize gallery, dropdown, batch picker HTML, recovery picker, queues."""
+            """Initialize gallery, batch picker HTML, recovery picker, queues."""
             gallery = load_all_rated_images()
-            names = get_image_names_list()
             return (
                 gallery,
-                gr.update(choices=names, value=None),
                 build_batch_picker_html([]),
                 "[]",
                 [],
@@ -1484,7 +1289,6 @@ def make_app():
                     gr.skip(),
                     gr.skip(),
                     gr.skip(),
-                    gr.skip(),
                 )
             count, detail = recover_deleted_images_batch(sel)
             if count <= 0:
@@ -1494,14 +1298,11 @@ def make_app():
                     gr.skip(),
                     gr.skip(),
                     gr.skip(),
-                    gr.skip(),
                 )
             gallery_items = load_all_rated_images()
-            names = get_image_names_list()
             return (
                 gr.update(visible=True, value=f"✅ {detail}"),
                 gr.update(value=gallery_items, selected_index=None),
-                gr.update(choices=names, value=None),
                 build_recover_picker_html([]),
                 "[]",
                 [],
@@ -1533,17 +1334,14 @@ def make_app():
 
         def handle_batch_delete(batch_state: List[str] | None):
             selected = list(batch_state or [])
-            tail_e = _delete_output_tail(selected, None, refresh_picker=False)
             if not selected:
                 return (
                     gr.update(visible=True, value="❌ Add images to the batch queue first."),
                     gr.skip(),
                     gr.skip(),
-                    *tail_e,
                     gr.skip(),
                     gr.skip(),
-                    gr.skip(),
-                    gr.skip(),
+                    *([gr.skip()] * len(batch_queue_outputs_flat)),
                 )
             count, detail = delete_images_and_ratings_batch(selected)
             if count <= 0:
@@ -1551,29 +1349,18 @@ def make_app():
                     gr.update(visible=True, value=f"❌ {detail}"),
                     gr.skip(),
                     gr.skip(),
-                    *tail_e,
                     gr.skip(),
                     gr.skip(),
-                    gr.skip(),
-                    gr.skip(),
+                    *([gr.skip()] * len(batch_queue_outputs_flat)),
                 )
-            names = get_image_names_list()
             gallery_items = load_all_rated_images()
-            tail = (
+            return (
+                gr.update(visible=True, value=f"✅ {detail}"),
+                gr.update(value=gallery_items, selected_index=None),
                 build_batch_picker_html([]),
                 "[]",
                 [],
                 *render_batch_queue_updates([]),
-            )
-            return (
-                gr.update(visible=True, value=f"✅ {detail}"),
-                gr.update(value=gallery_items, selected_index=None),
-                gr.update(choices=names, value=None),
-                *tail,
-                None,
-                0.7,
-                gr.update(interactive=False),
-                gr.update(interactive=False),
             )
 
         def handle_batch_apply_scores(batch_state: List[str] | None, scores_json: str):
@@ -1586,7 +1373,6 @@ def make_app():
             except Exception:
                 parsed = []
             batch_scores = list(parsed)
-            print(f"[batch-apply] state={names}  scores={batch_scores[:len(names)]}")
             if not names:
                 return (
                     gr.update(visible=True, value="❌ Add images to the batch queue first."),
@@ -1595,7 +1381,6 @@ def make_app():
                     gr.skip(),
                     [],
                     *render_batch_queue_updates([]),
-                    gr.skip(),
                 )
             pairs: List[Tuple[str, float]] = []
             for i, nm in enumerate(names[:nmax]):
@@ -1613,7 +1398,6 @@ def make_app():
                     gr.skip(),
                     pr,
                     *render_batch_queue_updates(pr),
-                    gr.skip(),
                 )
             gallery_items = load_all_rated_images()
             pr = prune_batch_queue(names)
@@ -1624,7 +1408,6 @@ def make_app():
                 json.dumps(pr),
                 pr,
                 *render_batch_queue_updates(pr),
-                gr.update(),
             )
         
         dl_btn.click(download_csv_handler, outputs=[download_csv])
@@ -1633,7 +1416,6 @@ def make_app():
             inputs=[batch_selected_state],
             outputs=[
                 saved_gallery,
-                selected_image_dropdown,
                 batch_picker_html,
                 batch_state_proxy,
                 batch_selected_state,
@@ -1655,59 +1437,17 @@ def make_app():
                 *batch_queue_outputs_flat,
             ],
         )
-        
-        # Dropdown selection handler
-        selected_image_dropdown.change(
-            on_image_select,
-            inputs=[selected_image_dropdown],
-            outputs=[selected_image_preview, edit_score_input, update_score_btn, delete_btn]
-        )
-        
-        # Gallery click handler
-        saved_gallery.select(
-            on_gallery_select,
-            outputs=[selected_image_dropdown, selected_image_preview, edit_score_input, update_score_btn, delete_btn]
-        )
-        
-        # Delete button handler with confirmation
-        delete_btn.click(
-            fn=handle_delete,
-            inputs=[selected_image_dropdown, batch_selected_state],
-            outputs=[
-                edit_status,
-                saved_gallery,
-                selected_image_dropdown,
-                batch_picker_html,
-                batch_state_proxy,
-                batch_selected_state,
-                *batch_queue_outputs_flat,
-                selected_image_preview,
-                edit_score_input,
-                update_score_btn,
-                delete_btn,
-            ],
-            js="() => { if (!confirm('Are you sure you want to delete this image? This action cannot be undone.')) { throw new Error('cancelled'); } }",
-        ).then(
-            refresh_recover_picker,
-            inputs=[recover_selected_state],
-            outputs=[recover_picker_html, recover_state_proxy, recover_selected_state],
-        )
 
         batch_delete_btn.click(
             fn=handle_batch_delete,
             inputs=[batch_selected_state],
             outputs=[
-                edit_status,
+                batch_status,
                 saved_gallery,
-                selected_image_dropdown,
                 batch_picker_html,
                 batch_state_proxy,
                 batch_selected_state,
                 *batch_queue_outputs_flat,
-                selected_image_preview,
-                edit_score_input,
-                update_score_btn,
-                delete_btn,
             ],
             js="() => { if (!confirm('Delete all images in the batch queue? This cannot be undone.')) { throw new Error('cancelled'); } }",
         ).then(
@@ -1721,40 +1461,20 @@ def make_app():
             fn=handle_batch_apply_scores,
             inputs=batch_apply_score_inputs,
             outputs=[
-                edit_status,
+                batch_status,
                 saved_gallery,
                 batch_picker_html,
                 batch_state_proxy,
                 batch_selected_state,
                 *batch_queue_outputs_flat,
-                edit_score_input,
             ],
             js="(_proxy) => { if (!confirm('Apply the score from each row to its queued image?')) { throw new Error('cancelled'); } var vals=[]; for (var i=0;i<15;i++){ var el=document.querySelector('#bp_row_score_'+i+' input'); if(!el){vals.push(null);continue;} var v=el.value; if(v===''||v==null){vals.push(null);} else { var f=parseFloat(v); vals.push(isNaN(f)?null:f); } } return [JSON.stringify(vals)]; }",
         )
-        
-        update_score_btn.click(
-            fn=handle_update_score,
-            inputs=[
-                selected_image_dropdown,
-                edit_score_input,
-                saved_gallery,
-                batch_selected_state,
-            ],
-            outputs=[
-                edit_status,
-                saved_gallery,
-                batch_picker_html,
-                batch_state_proxy,
-                edit_score_input,
-            ],
-            js="() => { if (!confirm('Are you sure you want to update the score for this image?')) { throw new Error('cancelled'); } }",
-        )
-        
+
         demo.load(
             on_startup,
             outputs=[
                 saved_gallery,
-                selected_image_dropdown,
                 batch_picker_html,
                 batch_state_proxy,
                 batch_selected_state,
@@ -1785,7 +1505,6 @@ def make_app():
             outputs=[
                 recover_status,
                 saved_gallery,
-                selected_image_dropdown,
                 recover_picker_html,
                 recover_state_proxy,
                 recover_selected_state,
