@@ -430,6 +430,22 @@ def get_deleted_image_names() -> List[str]:
         return []
 
 
+def get_recover_picker_image_names() -> List[str]:
+    """Image names shown in the recovery picker (CSV row + file exists in deleted_images/)."""
+    if not DELETED_RATINGS_CSV.exists():
+        return []
+    try:
+        df = _sort_df_by_name(pd.read_csv(DELETED_RATINGS_CSV))
+    except Exception:
+        return []
+    names: List[str] = []
+    for _, row in df.iterrows():
+        img_name = str(row["image_name"])
+        if (DELETED_DIR / img_name).is_file():
+            names.append(img_name)
+    return names
+
+
 def recover_deleted_images_batch(image_names: List[str]) -> Tuple[int, str]:
     """Move images back from deleted_images/ to uploads/ and restore their ratings rows."""
     if not image_names:
@@ -1044,6 +1060,7 @@ window.__bpMaxRows = __BP_MAX_ROWS__;
             interactive=True,
         )
         with gr.Row():
+            recover_select_all_btn = gr.Button("Select all deleted", variant="secondary")
             recover_clear_btn = gr.Button("Clear recovery queue", variant="secondary")
             recover_refresh_btn = gr.Button("Refresh deleted list", variant="secondary")
         with gr.Row():
@@ -1273,6 +1290,10 @@ window.__bpMaxRows = __BP_MAX_ROWS__;
         def clear_recover_queue_fn():
             return ([], build_recover_picker_html([]), "[]")
 
+        def select_all_recover_fn():
+            names = get_recover_picker_image_names()
+            return (names, build_recover_picker_html(names), json.dumps(names))
+
         def refresh_recover_picker(state: List[str] | None):
             pr = prune_recover_queue(state)
             return (build_recover_picker_html(pr), json.dumps(pr), pr)
@@ -1495,6 +1516,10 @@ window.__bpMaxRows = __BP_MAX_ROWS__;
             on_recover_proxy_change,
             inputs=[recover_state_proxy],
             outputs=[recover_selected_state],
+        )
+        recover_select_all_btn.click(
+            select_all_recover_fn,
+            outputs=[recover_selected_state, recover_picker_html, recover_state_proxy],
         )
         recover_clear_btn.click(
             clear_recover_queue_fn,
