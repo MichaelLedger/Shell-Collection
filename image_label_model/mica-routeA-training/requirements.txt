@@ -1,0 +1,10 @@
+# Route A training pipeline — Python 3.11 (TensorFlow/coremltools do not ship 3.13 wheels).
+# Pinned to broadly-compatible ranges; adjust if your platform needs specific builds.
+
+tensorflow==2.15.*          # MobileNetV3 with include_preprocessing (raw 0..255 input)
+coremltools>=7.2,<9.0       # Keras -> Core ML .mlpackage
+fiftyone>=0.24,<0.26        # Open Images V7 subset download (images + classification labels)
+numpy<2.0
+pandas>=2.0
+pillow>=10.0
+tqdm>=4.66
