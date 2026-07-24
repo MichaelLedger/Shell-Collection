@@ -1,0 +1,22 @@
+{
+  "servers": [
+    {
+      "id": "ci-8",
+      "baseUrl": "http://10.4.2.8:8080",
+      "label": "CI · 10.4.2.8",
+      "description": "Jenkins CI on 10.4.2.8"
+    },
+    {
+      "id": "ci-6",
+      "baseUrl": "http://10.4.2.6:8080",
+      "label": "CI · 10.4.2.6",
+      "description": "Jenkins CI on 10.4.2.6"
+    },
+    {
+      "id": "ci-5",
+      "baseUrl": "http://10.4.2.5:8080",
+      "label": "CI · 10.4.2.5",
+      "description": "Jenkins CI on 10.4.2.5"
+    }
+  ]
+}

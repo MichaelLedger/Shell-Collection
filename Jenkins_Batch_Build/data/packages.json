@@ -1,0 +1,42 @@
+{
+  "packages": [
+    {
+      "id": "b43ddc1d-505a-4756-84cf-abe6f5f5b18d",
+      "name": "PB Release Testing",
+      "description": "",
+      "jobs": [
+        {
+          "serverId": "ci-8",
+          "jobName": "PB_3.17.0"
+        },
+        {
+          "serverId": "ci-6",
+          "jobName": "PB_3.17.0"
+        },
+        {
+          "serverId": "ci-5",
+          "jobName": "PB_3.16.4_EU"
+        }
+      ],
+      "createdAt": "2026-07-24T06:22:08.985Z",
+      "updatedAt": "2026-07-24T06:22:08.985Z"
+    },
+    {
+      "id": "9beb1efc-9593-4b4d-bf32-4544cef0cc10",
+      "name": "PB_EU",
+      "jobs": [
+        {
+          "serverId": "ci-8",
+          "jobName": "PB_3.17.0_EU"
+        },
+        {
+          "serverId": "ci-5",
+          "jobName": "PB_3.16.4_EU"
+        }
+      ],
+      "createdAt": "2026-07-24T05:52:21.511Z",
+      "updatedAt": "2026-07-24T06:33:33.715Z",
+      "description": "PhotoBook EU Release builds"
+    }
+  ]
+}
