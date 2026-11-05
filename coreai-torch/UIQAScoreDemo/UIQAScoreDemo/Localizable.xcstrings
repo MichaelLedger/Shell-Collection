@@ -1,0 +1,58 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "—" : {
+
+    },
+    "Choose a photo to score its quality." : {
+
+    },
+    "Choose Photo" : {
+
+    },
+    "Could not read that photo." : {
+
+    },
+    "Loading Core AI model…" : {
+
+    },
+    "Loading photo…" : {
+
+    },
+    "Model loaded in %.2f seconds (%@)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Model loaded in %1$.2f seconds (%2$@)."
+          }
+        }
+      }
+    },
+    "Photo Score" : {
+
+    },
+    "Photo scoring needs an iOS 27 device. Core AI is not in the simulator." : {
+
+    },
+    "Quality score in %.2f seconds." : {
+
+    },
+    "Scoring photo…" : {
+
+    },
+    "Selected photo" : {
+
+    },
+    "The quality model did not return a score." : {
+
+    },
+    "The quality model has no main function." : {
+
+    },
+    "The quality model is not in the app." : {
+
+    }
+  },
+  "version" : "1.0"
+}

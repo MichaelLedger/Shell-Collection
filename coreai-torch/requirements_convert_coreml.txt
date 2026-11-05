@@ -1,0 +1,22 @@
+# Core dependencies
+torch>=2.0.0
+torchvision>=0.15.1
+numpy>=1.24.3
+coremltools>=8.3.0  # Updated to fix BlobWriter issues and support optimization features
+
+# Model-specific dependencies
+timm==0.6.13
+einops==0.6.1
+
+# Image processing
+pillow==10.0.0
+
+# Additional dependencies
+protobuf<=4.0.0,>=3.1.0  # Required by coremltools
+attrs>=21.3.0  # Required by coremltools
+cattrs>=25.3.0  # Required by coremltools
+pyaml>=25.7.0  # Required by coremltools
+
+# Python environment
+setuptools>=65.5.1
+wheel>=0.38.0

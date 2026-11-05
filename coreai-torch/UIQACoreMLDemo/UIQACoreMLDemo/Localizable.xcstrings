@@ -1,0 +1,20 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "—" : { },
+    "Choose Photo" : { },
+    "Choose a photo to score its quality." : { },
+    "Core ML Score" : { },
+    "Core ML could not score that photo." : { },
+    "Could not read that photo." : { },
+    "Loading Core ML model…" : { },
+    "Loading photo…" : { },
+    "Model loaded in %.2f seconds." : { },
+    "Quality score in %.2f seconds." : { },
+    "Scoring photo…" : { },
+    "Selected photo" : { },
+    "The quality model did not return a score." : { },
+    "The quality model is not in the app." : { }
+  },
+  "version" : "1.0"
+}
